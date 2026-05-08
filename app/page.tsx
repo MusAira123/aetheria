@@ -120,7 +120,7 @@ export default function Home() {
             <img
               src="/logo.png"
               className="h-64 md:h-56 lg:h-80 object-contain"
-            />
+            />Mun
 
           </div>
 
