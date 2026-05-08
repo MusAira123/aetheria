@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { supabase } from '@/app/lib/supabase'
 import {
   FaWhatsapp,
@@ -8,13 +8,155 @@ import {
   FaHome,
   FaBoxOpen,
   FaBookOpen,
-  FaPhone
+  FaPhone,
+  FaSearch
 } from 'react-icons/fa'
+
+function ProductCard({ product }: any) {
+  const [current, setCurrent] = useState(0)
+
+  const images =
+    product.images?.length > 0
+      ? product.images
+      : [product.image_url]
+
+  const nextImage = () => {
+    setCurrent((prev) =>
+      prev === images.length - 1 ? 0 : prev + 1
+    )
+  }
+
+  const prevImage = () => {
+    setCurrent((prev) =>
+      prev === 0 ? images.length - 1 : prev - 1
+    )
+  }
+
+  return (
+    <div
+      className="group relative overflow-hidden rounded-[72%_28%_58%_42%/38%_66%_34%_62%] p-[1px] transition-all duration-700 hover:-translate-y-6 hover:rotate-[-3deg]"
+    >
+
+      {/* SNAKE BORDER */}
+      <div className="absolute inset-0 rounded-[72%_28%_58%_42%/38%_66%_34%_62%] opacity-0 group-hover:opacity-100 transition duration-500 overflow-hidden">
+
+        <div className="absolute inset-[-200%] animate-snake-border bg-[conic-gradient(from_0deg,_transparent,_transparent,_#d4af37,_transparent,_transparent)]"></div>
+
+      </div>
+
+      {/* CARD */}
+      <div className="relative bg-white overflow-hidden rounded-[72%_28%_58%_42%/38%_66%_34%_62%] min-h-[620px] z-10 shadow-sm group-hover:shadow-[0_35px_90px_rgba(0,0,0,0.25)] transition-all duration-700 flex flex-col">
+
+        {/* IMAGE */}
+        <div className="relative w-full h-[360px] overflow-hidden flex items-center justify-center bg-black">
+
+          {/* IMAGE SLIDER */}
+          {images.map((img: string, index: number) => (
+            <img
+              key={index}
+              src={img}
+              className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-in-out group-hover:scale-110
+              ${
+                index === current
+                  ? 'opacity-100 scale-100 z-10'
+                  : 'opacity-0 scale-110 z-0'
+              }`}
+            />
+          ))}
+
+          {/* DARK OVERLAY */}
+          <div className="absolute inset-0 bg-black/10 z-10"></div>
+
+          {/* PREVIOUS BUTTON */}
+          {images.length > 1 && (
+            <button
+              onClick={prevImage}
+              className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-md hover:bg-white/40 text-white border border-white/30 w-11 h-11 rounded-full flex items-center justify-center text-2xl transition-all duration-300 z-20"
+            >
+              ‹
+            </button>
+          )}
+
+          {/* NEXT BUTTON */}
+          {images.length > 1 && (
+            <button
+              onClick={nextImage}
+              className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-md hover:bg-white/40 text-white border border-white/30 w-11 h-11 rounded-full flex items-center justify-center text-2xl transition-all duration-300 z-20"
+            >
+              ›
+            </button>
+          )}
+
+          {/* IMAGE DOTS */}
+          {images.length > 1 && (
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+
+              {images.map((_: any, index: number) => (
+                <div
+                  key={index}
+                  className={`transition-all duration-300 rounded-full
+                  ${
+                    index === current
+                      ? 'w-6 h-2 bg-white'
+                      : 'w-2 h-2 bg-white/50'
+                  }`}
+                />
+              ))}
+
+            </div>
+          )}
+
+        </div>
+
+        {/* CONTENT */}
+        <div className="flex-1 flex flex-col justify-between p-8 text-center">
+
+          <div>
+
+            <h4 className="font-semibold text-2xl leading-snug">
+              {product.name}
+            </h4>
+
+            <p className="text-gray-600 text-sm mt-3 leading-relaxed px-2">
+              {product.description}
+            </p>
+
+          </div>
+
+          <div className="mt-6">
+
+            <p className="font-bold text-2xl">
+              ₹{product.price}
+            </p>
+
+            <p className="text-sm mt-2 text-gray-700">
+              Available Qty: {product.qty}
+            </p>
+
+            <a
+              href={`https://wa.me/918055100913?text=Hi, I want ${product.name}`}
+              className="inline-block mt-6 bg-green-600 text-white px-4 py-3 rounded-2xl w-full text-center transition-all duration-300 hover:bg-green-700"
+            >
+              Buy on WhatsApp
+            </a>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  )
+}
 
 export default function Home() {
   const [products, setProducts] = useState<any[]>([])
   const [currentImage, setCurrentImage] = useState(0)
   const [currentQuote, setCurrentQuote] = useState(0)
+  const [search, setSearch] = useState('')
+
+  const categoryRefs = useRef<any>({})
 
   const heroImages = [
     "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0",
@@ -46,10 +188,40 @@ export default function Home() {
     }
   }, [])
 
+  useEffect(() => {
+    if (!search.trim()) return
+
+    const matchingProduct = products.find(
+      (p) =>
+        p.name?.toLowerCase().includes(search.toLowerCase()) ||
+        p.description?.toLowerCase().includes(search.toLowerCase())
+    )
+
+    if (matchingProduct?.category) {
+      const element = categoryRefs.current[matchingProduct.category]
+
+      if (element) {
+        element.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        })
+      }
+    }
+  }, [search, products])
+
   const fetchProducts = async () => {
     const { data } = await supabase.from('products').select('*')
     setProducts(data || [])
   }
+
+  const categories = [
+    "Earrings",
+    "Rings",
+    "Bracelets",
+    "Gift Hampers",
+    "Hair Accessories",
+    "Necklace"
+  ]
 
   return (
     <main className="min-h-screen bg-white text-gray-900">
@@ -57,10 +229,10 @@ export default function Home() {
       {/* HEADER */}
       <header className="sticky top-0 z-50 bg-black/95 backdrop-blur-md text-white px-6 md:px-12 py-4 rounded-b-3xl">
 
-        <div className="flex justify-start items-center">
+        <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
 
           {/* NAV */}
-          <nav className="flex gap-6 text-[11px] md:text-sm font-semibold tracking-[0.18em] uppercase">
+          <nav className="flex flex-wrap gap-6 text-[11px] md:text-sm font-semibold tracking-[0.18em] uppercase">
 
             <a href="#" className="flex flex-col items-center hover:text-yellow-400 transition">
               <span>Home</span>
@@ -83,6 +255,21 @@ export default function Home() {
             </a>
 
           </nav>
+
+          {/* SEARCH BAR */}
+          <div className="flex items-center bg-white/10 border border-white/20 rounded-full px-4 py-2 backdrop-blur-md w-full md:w-[280px]">
+
+            <FaSearch className="text-white/70 mr-3" />
+
+            <input
+              type="text"
+              placeholder="Search products..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="bg-transparent outline-none text-sm text-white placeholder:text-white/50 w-full"
+            />
+
+          </div>
 
         </div>
 
@@ -114,17 +301,15 @@ export default function Home() {
 
         <div className="flex flex-col gap-6">
 
-          {/* LOGO */}
-          <div className="w-full flex justify-start ml-[-40px] md:ml-[-120px]">
+          <div className="w-full flex justify-start ml-[40px] md:ml-[-120px]">
 
             <img
               src="/logo.png"
-              className="h-64 md:h-64 lg:h-80 object-contain"
+              className="h-56 md:h-64 lg:h-80 object-contain"
             />
 
           </div>
 
-          {/* QUOTE SLIDER */}
           <div className="bg-gradient-to-r from-black via-gray-900 to-black text-white rounded-xl px-6 py-3 shadow-md w-[340px] md:w-[420px] h-[60px] flex items-center">
 
             <p className="text-sm md:text-base font-semibold tracking-wide">
@@ -133,18 +318,16 @@ export default function Home() {
 
           </div>
 
-          {/* HEADING */}
           <h2 className="text-5xl font-bold leading-tight">
-            Premium Jewelry<br />
+            Premium Jewelry
+            <br />
             Built for Everyday Luxury
           </h2>
 
-          {/* SUBTEXT */}
           <p className="text-gray-600 text-lg">
             Waterproof • Anti-Tarnish • Modern Minimal Designs
           </p>
 
-          {/* BUTTONS */}
           <div className="flex gap-4">
 
             <a
@@ -166,7 +349,6 @@ export default function Home() {
 
         </div>
 
-        {/* HERO IMAGE */}
         <div className="relative w-full h-[480px] md:h-[560px] lg:h-[700px]">
 
           {heroImages.map((img, index) => (
@@ -174,8 +356,7 @@ export default function Home() {
               key={index}
               src={img}
               onError={(e) => (e.currentTarget.src = heroImages[0])}
-              className={`absolute inset-0 w-full h-full object-cover rounded-2xl transition-all duration-1000
-              ${index === currentImage ? 'opacity-100 z-10' : 'opacity-0'}`}
+              className={`absolute inset-0 w-full h-full object-cover rounded-2xl transition-all duration-1000 ${index === currentImage ? 'opacity-100 z-10' : 'opacity-0'}`}
             />
           ))}
 
@@ -186,82 +367,42 @@ export default function Home() {
       {/* PRODUCTS */}
       <section id="shop" className="px-6 md:px-12 py-20">
 
-        <h3 className="text-3xl font-bold mb-10">
-          Best Products
+        <h3 className="text-3xl font-bold mb-14">
+          Shop By Categories
         </h3>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
+        {categories.map((category) => {
 
-          {products.map((p) => (
+          const filteredProducts = products.filter(
+            (p) => p.category === category
+          )
 
+          if (filteredProducts.length === 0) return null
+
+          return (
             <div
-              key={p.id}
-              className="group relative overflow-hidden rounded-[72%_28%_58%_42%/38%_66%_34%_62%] p-[1px] transition-all duration-700 hover:-translate-y-6 hover:rotate-[-3deg]"
+              key={category}
+              ref={(el) => {
+                categoryRefs.current[category] = el
+              }}
+              className="mb-20"
             >
 
-              {/* SNAKE BORDER */}
-              <div className="absolute inset-0 rounded-[72%_28%_58%_42%/38%_66%_34%_62%] opacity-0 group-hover:opacity-100 transition duration-500 overflow-hidden">
+              <h4 className="text-2xl font-bold mb-8">
+                {category}
+              </h4>
 
-                <div className="absolute inset-[-200%] animate-snake-border bg-[conic-gradient(from_0deg,_transparent,_transparent,_#d4af37,_transparent,_transparent)]"></div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
 
-              </div>
-
-              {/* CARD CONTENT */}
-              <div className="relative bg-white overflow-hidden rounded-[72%_28%_58%_42%/38%_66%_34%_62%] min-h-[620px] z-10 shadow-sm group-hover:shadow-[0_35px_90px_rgba(0,0,0,0.25)] transition-all duration-700 flex flex-col">
-
-                {/* IMAGE */}
-                <div className="relative w-full h-[360px] overflow-hidden flex items-center justify-center">
-
-                  <img
-                    src={p.image_url}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-
-                </div>
-
-                {/* CONTENT */}
-                <div className="flex-1 flex flex-col justify-between p-8 text-center">
-
-                  <div>
-
-                    <h4 className="font-semibold text-2xl leading-snug">
-                      {p.name}
-                    </h4>
-
-                    <p className="text-gray-600 text-sm mt-3 leading-relaxed px-2">
-                      {p.description}
-                    </p>
-
-                  </div>
-
-                  <div className="mt-6">
-
-                    <p className="font-bold text-2xl">
-                      ₹{p.price}
-                    </p>
-
-                    <p className="text-sm mt-2 text-gray-700">
-                      Qty: {p.qty}
-                    </p>
-
-                    <a
-                      href={`https://wa.me/918055100913?text=Hi, I want ${p.name}`}
-                      className="inline-block mt-6 bg-green-600 text-white px-4 py-3 rounded-2xl w-full text-center transition-all duration-300 hover:bg-green-700"
-                    >
-                      Buy on WhatsApp
-                    </a>
-
-                  </div>
-
-                </div>
+                {filteredProducts.map((p) => (
+                  <ProductCard key={p.id} product={p} />
+                ))}
 
               </div>
 
             </div>
-
-          ))}
-
-        </div>
+          )
+        })}
 
       </section>
 
@@ -317,7 +458,6 @@ export default function Home() {
 
         <div className="grid md:grid-cols-4 gap-25">
 
-          {/* BRAND */}
           <div>
 
             <img
@@ -332,7 +472,6 @@ export default function Home() {
 
           </div>
 
-          {/* LINKS */}
           <div>
 
             <h4 className="text-lg font-semibold mb-4">
@@ -348,7 +487,6 @@ export default function Home() {
 
           </div>
 
-          {/* WHY US */}
           <div>
 
             <h4 className="text-lg font-semibold mb-4">
@@ -365,7 +503,6 @@ export default function Home() {
 
           </div>
 
-          {/* CONTACT */}
           <div>
 
             <h4 className="text-lg font-semibold mb-4">
