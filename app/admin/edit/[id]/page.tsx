@@ -17,8 +17,10 @@ export default function EditProduct() {
   const [description, setDescription] = useState('')
   const [qty, setQty] = useState('')
   const [category, setCategory] = useState('')
-  const [image, setImage] = useState('')
-  const [newImage, setNewImage] = useState<File | null>(null)
+
+  const [images, setImages] = useState<string[]>([])
+  const [newImages, setNewImages] = useState<File[]>([])
+
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
@@ -38,42 +40,59 @@ export default function EditProduct() {
       setDescription(data.description || '')
       setQty(data.qty || '')
       setCategory(data.category || '')
-      setImage(
+
+      setImages(
         data.images?.length > 0
-          ? data.images[0]
-          : data.image_url || ''
+          ? data.images
+          : data.image_url
+            ? [data.image_url]
+            : []
       )
     }
+  }
+
+  const removeImage = (index: number) => {
+    const updatedImages = [...images]
+
+    updatedImages.splice(index, 1)
+
+    setImages(updatedImages)
   }
 
   const updateProduct = async () => {
     setLoading(true)
 
-    let imageUrl = image
+    let updatedImages = [...images]
 
-    // UPLOAD NEW IMAGE
-    if (newImage) {
+    // UPLOAD NEW IMAGES
+    if (newImages.length > 0) {
 
-      const fileExt = newImage.name.split('.').pop()
+      for (const file of newImages) {
 
-      const fileName = `${Date.now()}.${fileExt}`
+        const fileExt = file.name.split('.').pop()
 
-      const { error: uploadError } = await supabase.storage
-        .from('product-images')
-        .upload(fileName, newImage)
+        const fileName = `${Date.now()}-${Math.random()}.${fileExt}`
 
-      if (uploadError) {
-        alert(uploadError.message)
-        setLoading(false)
-        return
+        const { error: uploadError } = await supabase.storage
+          .from('product-images')
+          .upload(fileName, file)
+
+        if (uploadError) {
+          alert(uploadError.message)
+          setLoading(false)
+          return
+        }
+
+        const { data } = supabase.storage
+          .from('product-images')
+          .getPublicUrl(fileName)
+
+        updatedImages.push(data.publicUrl)
       }
-
-      const { data } = supabase.storage
-        .from('product-images')
-        .getPublicUrl(fileName)
-
-      imageUrl = data.publicUrl
     }
+
+    // LIMIT MAX 3 IMAGES
+    updatedImages = updatedImages.slice(0, 3)
 
     const { error } = await supabase
       .from('products')
@@ -83,8 +102,8 @@ export default function EditProduct() {
         description,
         qty: Number(qty),
         category,
-        image_url: imageUrl,
-        images: [imageUrl],
+        image_url: updatedImages[0] || '',
+        images: updatedImages,
       })
       .eq('id', productId)
 
@@ -227,19 +246,19 @@ export default function EditProduct() {
           <div className="mb-6">
 
             <label className="block text-sm text-white/70 mb-2">
-              Update Product Image
+              Update Product Images
             </label>
 
             <input
               type="file"
+              multiple
               accept="image/*"
               onChange={(e) => {
-                const file = e.target.files?.[0]
+                const files = Array.from(
+                  e.target.files || []
+                ).slice(0, 3)
 
-                if (file) {
-                  setNewImage(file)
-                  setImage(URL.createObjectURL(file))
-                }
+                setNewImages(files)
               }}
               className="w-full bg-white/10 border border-white/20 text-white file:bg-white file:text-black file:border-0 file:px-4 file:py-2 file:rounded-xl file:mr-4 px-4 py-3 rounded-2xl"
             />
@@ -271,12 +290,12 @@ export default function EditProduct() {
         {/* RIGHT - LIVE PREVIEW */}
         <div className="bg-white rounded-[32px] overflow-hidden shadow-2xl">
 
-          {/* IMAGE */}
+          {/* MAIN IMAGE */}
           <div className="relative h-[420px] overflow-hidden">
 
-            {image ? (
+            {images.length > 0 ? (
               <img
-                src={image}
+                src={images[0]}
                 className="w-full h-full object-cover"
               />
             ) : (
@@ -314,6 +333,34 @@ export default function EditProduct() {
             <p className="mt-5 text-gray-600 leading-relaxed">
               {description || 'Product description will appear here...'}
             </p>
+
+            {/* IMAGE THUMBNAILS */}
+            <div className="flex gap-3 mt-6 flex-wrap">
+
+              {images.map((img, index) => (
+
+                <div
+                  key={index}
+                  className="relative"
+                >
+
+                  <img
+                    src={img}
+                    className="w-20 h-20 object-cover rounded-2xl border"
+                  />
+
+                  <button
+                    onClick={() => removeImage(index)}
+                    className="absolute -top-2 -right-2 bg-red-500 text-white w-6 h-6 rounded-full text-xs"
+                  >
+                    ✕
+                  </button>
+
+                </div>
+
+              ))}
+
+            </div>
 
           </div>
 
