@@ -37,9 +37,12 @@ export default function Dashboard() {
       {/* HEADER */}
       <div className="bg-white rounded-xl shadow-sm p-4 mb-6 flex justify-between items-center">
 
-        <h1 className="text-2xl font-semibold">Admin Dashboard</h1>
+        <h1 className="text-2xl font-semibold">
+          Admin Dashboard
+        </h1>
 
         <div className="flex gap-3">
+
           <button
             onClick={() => router.push('/admin/add-product')}
             className="bg-black text-white px-4 py-2 rounded-lg hover:opacity-90"
@@ -53,6 +56,7 @@ export default function Dashboard() {
           >
             Logout
           </button>
+
         </div>
 
       </div>
@@ -66,32 +70,52 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
 
         {products.length === 0 ? (
-          <p className="text-gray-500">No products yet</p>
+          <p className="text-gray-500">
+            No products yet
+          </p>
         ) : (
           products.map((p) => (
+
             <div
               key={p.id}
               className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition"
             >
 
+              {/* PRODUCT IMAGE */}
               <img
-                src={p.image_url}
+                src={
+                  p.images?.length > 0
+                    ? p.images[0]
+                    : p.image_url
+                }
                 className="h-40 w-full object-cover"
               />
 
               <div className="p-4">
 
+                {/* NAME */}
                 <h3 className="font-semibold text-lg">
                   {p.name}
                 </h3>
 
+                {/* CATEGORY */}
+                <p className="text-sm text-gray-500 mt-1">
+                  Category: {p.category || 'No Category'}
+                </p>
+
+                {/* PRICE */}
                 <p className="text-gray-500 text-sm mt-1">
                   ₹{p.price}
                 </p>
 
-                {/* ✅ NEW: QTY DISPLAY */}
+                {/* QTY */}
                 <p className="text-sm mt-1">
                   Qty: {p.qty}
+                </p>
+
+                {/* TOTAL IMAGES */}
+                <p className="text-sm mt-1 text-gray-500">
+                  Images: {p.images?.length || 1}
                 </p>
 
                 {/* ACTIONS */}
@@ -107,9 +131,14 @@ export default function Dashboard() {
                   <button
                     onClick={async () => {
                       const confirmDelete = confirm('Delete this product?')
+
                       if (!confirmDelete) return
 
-                      await supabase.from('products').delete().eq('id', p.id)
+                      await supabase
+                        .from('products')
+                        .delete()
+                        .eq('id', p.id)
+
                       fetchProducts()
                     }}
                     className="flex-1 bg-red-500 text-white py-1.5 rounded-md text-sm"
@@ -122,6 +151,7 @@ export default function Dashboard() {
               </div>
 
             </div>
+
           ))
         )}
 
