@@ -57,7 +57,7 @@ export default function Home() {
       {/* HEADER */}
       <header className="sticky top-0 z-50 bg-black/95 backdrop-blur-md text-white px-6 md:px-12 py-4 rounded-b-3xl">
 
-        <div className="flex justify-center items-center">
+        <div className="flex justify-start items-center">
 
           {/* NAV */}
           <nav className="flex gap-6 text-[11px] md:text-sm font-semibold tracking-[0.18em] uppercase">
