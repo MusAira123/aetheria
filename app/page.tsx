@@ -115,7 +115,7 @@ export default function Home() {
         <div className="flex flex-col gap-6">
 
           {/* LOGO */}
-          <div className="w-full flex justify-start ml-[-40px] md:ml-[-80px]">
+          <div className="w-full flex justify-start ml-[-40px] md:ml-[-120px]">
 
             <img
               src="/logo.png"
