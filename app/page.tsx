@@ -428,6 +428,94 @@ export default function Home() {
 
       </section>
 
+      {/* SHIPPING POLICY */}
+      <section className="px-6 md:px-12 py-20">
+
+        <div className="max-w-4xl">
+
+          <h3 className="text-3xl font-bold mb-8">
+            Shipping Policy
+          </h3>
+
+          <p className="text-gray-600 leading-relaxed mb-6">
+            Thank you for shopping with <span className="font-semibold">Aetheria</span> ✨
+            <br /><br />
+            We’re committed to delivering your jewellery safely and beautifully packed right to your doorstep 💌
+          </p>
+
+          <p className="text-gray-600 leading-relaxed mb-6">
+            Once your order is confirmed, it will be carefully processed and dispatched within
+            <span className="font-semibold"> 2 working days</span>.
+            <br /><br />
+            After dispatch, delivery usually takes around
+            <span className="font-semibold"> 6–7 working days</span>,
+            depending on your location and courier availability.
+          </p>
+
+          <p className="text-gray-600 leading-relaxed mb-10">
+            We work with trusted delivery partners to ensure your order reaches you in perfect condition 🤍
+          </p>
+
+          <h4 className="text-2xl font-bold mb-5">
+            Shipping Charges
+          </h4>
+
+          <div className="bg-gray-50 rounded-2xl p-6 border border-gray-200 mb-10">
+
+            <ul className="space-y-4 text-gray-700 leading-relaxed">
+
+              <li>
+                • A standard shipping fee of
+                <span className="font-semibold"> ₹40</span>
+                is applicable on orders below
+                <span className="font-semibold"> ₹599</span>.
+              </li>
+
+              <li>
+                • Enjoy
+                <span className="font-semibold"> FREE SHIPPING </span>
+                on all orders above
+                <span className="font-semibold"> ₹599</span> ✨
+              </li>
+
+              <li>
+                • Shipping charges are non-refundable once the order is shipped.
+              </li>
+
+            </ul>
+
+          </div>
+
+          <h4 className="text-2xl font-bold mb-5">
+            Important Information
+          </h4>
+
+          <div className="space-y-4 text-gray-600 leading-relaxed">
+
+            <p>
+              • Delivery timelines may vary slightly during sales, festivals,
+              or due to courier delays.
+            </p>
+
+            <p>
+              • Please make sure your address and contact details are entered
+              correctly while placing the order.
+            </p>
+
+            <p>
+              • Once your order is dispatched, tracking details will be shared with you.
+            </p>
+
+            <p>
+              For any queries related to your order, feel free to contact us on WhatsApp & Instagram DM 💖
+            </p>
+
+          </div>
+
+        </div>
+
+      </section>
+
       {/* INSTAGRAM */}
       <section className="px-6 md:px-12 py-20 text-center">
 
