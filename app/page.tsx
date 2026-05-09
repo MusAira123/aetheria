@@ -413,17 +413,40 @@ export default function Home() {
           Our Story
         </h3>
 
-        <p className="text-gray-600 max-w-3xl leading-relaxed">
-          Aetheria was created to bring everyday luxury into modern life.
-          Jewelry should not be reserved for occasions — it should be worn daily.
+        <p className="text-gray-600 max-w-4xl leading-relaxed text-lg">
+
+          At Aetheria, we believe every girl deserves to feel beautiful,
+          confident, and special — every single day ✨
 
           <br /><br />
 
-          Our pieces are waterproof, anti-tarnish, and crafted to last.
+          Jewellery is not just an accessory for us, it’s a feeling.
+          <br />
+          A little sparkle for college days, a touch of elegance for festivals,
+          and confidence for everyday moments 🤍
 
           <br /><br />
 
-          We create more than jewelry — we create confidence.
+          We started Aetheria with one simple dream — to create premium quality
+          jewellery that looks luxurious but stays affordable for every girl.
+          Because looking beautiful shouldn’t come with a heavy price tag.
+
+          <br /><br />
+
+          From daily wear essentials to statement pieces, every design is chosen
+          with love, care, and attention to quality 💎
+
+          <br /><br />
+
+          We want our jewellery to become a part of your memories —
+          your first college fest, your favourite outfit, your special moments.
+
+          <br /><br />
+
+          At Aetheria, you’re not just buying jewellery…
+          <br />
+          You’re wearing confidence, elegance, and a little piece of magic ✨🦋
+
         </p>
 
       </section>
@@ -473,7 +496,7 @@ export default function Home() {
 
               <li>
                 • Enjoy
-                <span className="font-semibold"> FREE SHIPPING </span>
+                <span className="font-semibold"> FREE SHIPPING</span>
                 on all orders above
                 <span className="font-semibold"> ₹599</span> ✨
               </li>
@@ -507,7 +530,7 @@ export default function Home() {
             </p>
 
             <p>
-              For any queries related to your order, feel free to contact us on WhatsApp & Instagram DM 💖
+              For any queries related to your order, feel free to contact us on Instagram DM 💖
             </p>
 
           </div>
