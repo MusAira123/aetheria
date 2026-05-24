@@ -33,9 +33,7 @@ function ProductCard({ product }: any) {
   }
 
   return (
-    <div
-      className="group relative overflow-hidden rounded-3xl p-[1px] transition-all duration-500 hover:-translate-y-2"
-    >
+    <div className="group relative overflow-hidden rounded-3xl p-[1px] transition-all duration-500 hover:-translate-y-2">
 
       {/* SNAKE BORDER */}
       <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition duration-500 overflow-hidden">
@@ -234,13 +232,41 @@ export default function Home() {
           {/* NAV */}
           <nav className="flex flex-wrap gap-6 text-[11px] md:text-sm font-semibold tracking-[0.18em] uppercase">
 
-            <a href="#" className="flex flex-col items-center hover:text-yellow-400 transition">
+            {/* HOME */}
+            <a
+              href="#"
+              className="flex flex-col items-center hover:text-yellow-400 transition"
+            >
               <span>Home</span>
               <FaHome className="text-sm mt-1" />
             </a>
 
             {/* PRODUCTS DROPDOWN */}
-            <div className="relative group">
+            <div
+              className="relative"
+              onMouseLeave={(e) => {
+                const dropdown = e.currentTarget.querySelector(
+                  '.products-dropdown'
+                ) as HTMLElement
+
+                if (dropdown) {
+                  dropdown.style.opacity = '0'
+                  dropdown.style.visibility = 'hidden'
+                  dropdown.style.transform = 'translateY(10px)'
+                }
+              }}
+              onMouseEnter={(e) => {
+                const dropdown = e.currentTarget.querySelector(
+                  '.products-dropdown'
+                ) as HTMLElement
+
+                if (dropdown) {
+                  dropdown.style.opacity = '1'
+                  dropdown.style.visibility = 'visible'
+                  dropdown.style.transform = 'translateY(0px)'
+                }
+              }}
+            >
 
               <a
                 href="#shop"
@@ -251,37 +277,57 @@ export default function Home() {
               </a>
 
               {/* DROPDOWN */}
-              <div className="absolute left-0 top-full mt-3 hidden group-hover:block bg-black border border-white/10 rounded-2xl overflow-hidden min-w-[220px] shadow-2xl z-50">
+              <div
+                className="products-dropdown absolute left-0 top-full pt-3 z-50"
+                style={{
+                  opacity: 0,
+                  visibility: 'hidden',
+                  transform: 'translateY(10px)',
+                  transition: 'all 0.25s ease'
+                }}
+              >
 
-                {categories.map((cat) => (
-                  <button
-                    key={cat}
-                    onClick={() => {
-                      const element = categoryRefs.current[cat]
+                <div className="bg-black/95 backdrop-blur-md border border-white/10 rounded-2xl overflow-hidden min-w-[240px] shadow-2xl">
 
-                      if (element) {
-                        element.scrollIntoView({
-                          behavior: 'smooth',
-                          block: 'start',
-                        })
-                      }
-                    }}
-                    className="w-full text-left px-5 py-3 text-sm hover:bg-white/10 transition"
-                  >
-                    {cat}
-                  </button>
-                ))}
+                  {categories.map((cat) => (
+                    <button
+                      key={cat}
+                      onClick={() => {
+                        const element = categoryRefs.current[cat]
+
+                        if (element) {
+                          element.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start',
+                          })
+                        }
+                      }}
+                      className="w-full text-left px-5 py-3 text-sm hover:bg-white/10 transition duration-300"
+                    >
+                      {cat}
+                    </button>
+                  ))}
+
+                </div>
 
               </div>
 
             </div>
 
-            <a href="#story" className="flex flex-col items-center hover:text-yellow-400 transition">
+            {/* STORY */}
+            <a
+              href="#story"
+              className="flex flex-col items-center hover:text-yellow-400 transition"
+            >
               <span>Our Story</span>
               <FaBookOpen className="text-sm mt-1" />
             </a>
 
-            <a href="#contact" className="flex flex-col items-center hover:text-yellow-400 transition">
+            {/* CONTACT */}
+            <a
+              href="#contact"
+              className="flex flex-col items-center hover:text-yellow-400 transition"
+            >
               <span>Contact</span>
               <FaPhone className="text-sm mt-1" />
             </a>
@@ -306,95 +352,6 @@ export default function Home() {
         </div>
 
       </header>
-
-      {/* TRUST STRIP */}
-      <section className="sticky top-[72px] z-40 overflow-hidden bg-gradient-to-r from-yellow-50 via-white to-yellow-50 py-6">
-
-        <div className="flex animate-marquee whitespace-nowrap gap-16 text-sm md:text-base font-semibold text-gray-800">
-
-          {[...Array(2)].map((_, i) => (
-            <div key={i} className="flex gap-16">
-              <span>✨ Waterproof</span>
-              <span>✨ Anti-Tarnish</span>
-              <span>✨ Premium Finish</span>
-              <span>✨ Fast Shipping</span>
-              <span>✨ Hypoallergenic</span>
-              <span>✨ Lifetime Shine</span>
-              <span>✨ Handmade Jewelry</span>
-            </div>
-          ))}
-
-        </div>
-
-      </section>
-
-      {/* HERO */}
-      <section className="px-6 md:px-12 py-20 grid md:grid-cols-2 gap-10 items-center">
-
-        <div className="flex flex-col gap-6">
-
-          <div className="w-full flex justify-start ml-[40px] md:ml-[-120px]">
-
-            <img
-              src="/logo.png"
-              className="h-56 md:h-64 lg:h-80 object-contain"
-            />
-
-          </div>
-
-          <div className="bg-gradient-to-r from-black via-gray-900 to-black text-white rounded-xl px-6 py-3 shadow-md w-[340px] md:w-[420px] h-[60px] flex items-center">
-
-            <p className="text-sm md:text-base font-semibold tracking-wide">
-              {quotes[currentQuote]}
-            </p>
-
-          </div>
-
-          <h2 className="text-5xl font-bold leading-tight">
-            Premium Jewelry
-            <br />
-            Built for Everyday Luxury
-          </h2>
-
-          <p className="text-gray-600 text-lg">
-            Waterproof • Anti-Tarnish • Modern Minimal Designs
-          </p>
-
-          <div className="flex gap-4">
-
-            <a
-              href="#shop"
-              className="bg-black text-white px-6 py-3 rounded-lg"
-            >
-              Shop Now
-            </a>
-
-            <a
-              href="https://wa.me/918055100913"
-              className="flex items-center gap-2 border px-6 py-3 rounded-lg"
-            >
-              <FaWhatsapp className="text-green-500 text-lg" />
-              WhatsApp Us
-            </a>
-
-          </div>
-
-        </div>
-
-        <div className="relative w-full h-[480px] md:h-[560px] lg:h-[700px]">
-
-          {heroImages.map((img, index) => (
-            <img
-              key={index}
-              src={img}
-              onError={(e) => (e.currentTarget.src = heroImages[0])}
-              className={`absolute inset-0 w-full h-full object-cover rounded-2xl transition-all duration-1000 ${index === currentImage ? 'opacity-100 z-10' : 'opacity-0'}`}
-            />
-          ))}
-
-        </div>
-
-      </section>
 
       {/* PRODUCTS */}
       <section id="shop" className="px-6 md:px-12 py-20">
