@@ -43,7 +43,7 @@ function ProductCard({ product }: any) {
       </div>
 
       {/* CARD */}
-      <div className="relative bg-white overflow-hidden rounded-3xl min-h-[620px] z-10 shadow-md hover:shadow-2xl transition-all duration-500 flex flex-col">
+      <div className="relative bg-white overflow-hidden rounded-3xl min-h-[520px] md:min-h-[620px] z-10 shadow-md hover:shadow-2xl transition-all duration-500 flex flex-col">
 
         {/* IMAGE */}
         <div className="relative w-full h-[220px] md:h-[360px] overflow-hidden flex items-center justify-center bg-black">
@@ -115,13 +115,13 @@ function ProductCard({ product }: any) {
               {product.name}
             </h4>
 
-            <p className="text-gray-600 text-[11px] md:text-sm mt-3 leading-relaxed px-2">
+            <p className="text-gray-600 text-[11px] md:text-sm mt-1 leading-relaxed px-1 md:px-2">
               {product.description}
             </p>
 
           </div>
 
-          <div className="mt-6">
+          <div className="mt-2 md:mt-6">
 
             <p className="font-bold text-lg md:text-2xl">
               ₹{product.price}
@@ -354,7 +354,7 @@ export default function Home() {
       </header>
 
       {/* PRODUCTS */}
-      <section id="shop" className="px-6 md:px-12 py-20">
+      <section id="shop" className="px-4 md:px-12 py-20">
 
         <h3 className="text-3xl font-bold mb-14">
           Shop By Categories
