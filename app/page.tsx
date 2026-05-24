@@ -35,9 +35,11 @@ function ProductCard({ product }: any) {
   return (
     <div className="group relative overflow-hidden rounded-3xl p-[1px] transition-all duration-500 hover:-translate-y-2">
 
-      {/* BORDER */}
+      {/* SNAKE BORDER */}
       <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition duration-500 overflow-hidden">
+
         <div className="absolute inset-[-200%] animate-snake-border bg-[conic-gradient(from_0deg,_transparent,_transparent,_#d4af37,_transparent,_transparent)]"></div>
+
       </div>
 
       {/* CARD */}
@@ -46,6 +48,7 @@ function ProductCard({ product }: any) {
         {/* IMAGE */}
         <div className="relative w-full h-[190px] md:h-[360px] overflow-hidden flex items-center justify-center bg-black">
 
+          {/* IMAGE SLIDER */}
           {images.map((img: string, index: number) => (
             <img
               key={index}
@@ -59,31 +62,33 @@ function ProductCard({ product }: any) {
             />
           ))}
 
+          {/* DARK OVERLAY */}
           <div className="absolute inset-0 bg-black/10 z-10"></div>
 
-          {/* PREV */}
+          {/* PREVIOUS BUTTON */}
           {images.length > 1 && (
             <button
               onClick={prevImage}
-              className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-md hover:bg-white/40 text-white border border-white/30 w-7 h-7 md:w-11 md:h-11 rounded-full flex items-center justify-center text-lg md:text-2xl transition-all duration-300 z-20"
+              className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-md hover:bg-white/40 text-white border border-white/30 w-7 h-7 md:w-11 md:h-11 rounded-full flex items-center justify-center text-lg md:text-2xl transition-all duration-300 z-20"
             >
               ‹
             </button>
           )}
 
-          {/* NEXT */}
+          {/* NEXT BUTTON */}
           {images.length > 1 && (
             <button
               onClick={nextImage}
-              className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-md hover:bg-white/40 text-white border border-white/30 w-7 h-7 md:w-11 md:h-11 rounded-full flex items-center justify-center text-lg md:text-2xl transition-all duration-300 z-20"
+              className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-md hover:bg-white/40 text-white border border-white/30 w-7 h-7 md:w-11 md:h-11 rounded-full flex items-center justify-center text-lg md:text-2xl transition-all duration-300 z-20"
             >
               ›
             </button>
           )}
 
-          {/* DOTS */}
+          {/* IMAGE DOTS */}
           {images.length > 1 && (
             <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+
               {images.map((_: any, index: number) => (
                 <div
                   key={index}
@@ -95,13 +100,14 @@ function ProductCard({ product }: any) {
                   }`}
                 />
               ))}
+
             </div>
           )}
 
         </div>
 
         {/* CONTENT */}
-        <div className="flex flex-col justify-between p-3 md:p-8 text-center flex-1">
+        <div className="flex-1 flex flex-col justify-between p-3 md:p-8 text-center">
 
           <div>
 
@@ -249,33 +255,37 @@ export default function Home() {
 
               {/* DROPDOWN */}
               <div
-                className={`absolute left-0 top-full bg-black border border-white/10 rounded-2xl overflow-hidden min-w-[220px] shadow-2xl z-50 transition-all duration-200 ${
+                className={`absolute left-0 top-full pt-2 min-w-[220px] z-50 transition-all duration-200 ${
                   dropdownOpen
-                    ? 'opacity-100 visible translate-y-2'
-                    : 'opacity-0 invisible translate-y-0'
+                    ? 'opacity-100 visible'
+                    : 'opacity-0 invisible'
                 }`}
               >
 
-                {categories.map((cat) => (
-                  <button
-                    key={cat}
-                    onClick={() => {
-                      const element = categoryRefs.current[cat]
+                <div className="bg-black border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
 
-                      if (element) {
-                        element.scrollIntoView({
-                          behavior: 'smooth',
-                          block: 'start',
-                        })
-                      }
+                  {categories.map((cat) => (
+                    <button
+                      key={cat}
+                      onClick={() => {
+                        const element = categoryRefs.current[cat]
 
-                      setDropdownOpen(false)
-                    }}
-                    className="w-full text-left px-5 py-3 text-sm hover:bg-white/10 transition"
-                  >
-                    {cat}
-                  </button>
-                ))}
+                        if (element) {
+                          element.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start',
+                          })
+                        }
+
+                        setDropdownOpen(false)
+                      }}
+                      className="w-full text-left px-5 py-3 text-sm hover:bg-white/10 transition"
+                    >
+                      {cat}
+                    </button>
+                  ))}
+
+                </div>
 
               </div>
 
@@ -292,8 +302,157 @@ export default function Home() {
             </a>
 
           </nav>
+
+          {/* SEARCH BAR */}
+          <div className="flex items-center bg-white/10 border border-white/20 rounded-full px-4 py-2 backdrop-blur-md w-full md:w-[280px]">
+
+            <FaSearch className="text-white/70 mr-3" />
+
+            <input
+              type="text"
+              placeholder="Search products..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="bg-transparent outline-none text-sm text-white placeholder:text-white/50 w-full"
+            />
+
+          </div>
+
         </div>
+
       </header>
+
+      {/* TRUST STRIP */}
+      <section className="sticky top-[72px] z-40 overflow-hidden bg-gradient-to-r from-yellow-50 via-white to-yellow-50 py-6">
+
+        <div className="flex animate-marquee whitespace-nowrap gap-16 text-sm md:text-base font-semibold text-gray-800">
+
+          {[...Array(2)].map((_, i) => (
+            <div key={i} className="flex gap-16">
+              <span>✨ Waterproof</span>
+              <span>✨ Anti-Tarnish</span>
+              <span>✨ Premium Finish</span>
+              <span>✨ Fast Shipping</span>
+              <span>✨ Hypoallergenic</span>
+              <span>✨ Lifetime Shine</span>
+              <span>✨ Handmade Jewelry</span>
+            </div>
+          ))}
+
+        </div>
+
+      </section>
+
+      {/* HERO */}
+      <section className="px-6 md:px-12 py-20 grid md:grid-cols-2 gap-10 items-center">
+
+        <div className="flex flex-col gap-6">
+
+          <div className="w-full flex justify-start ml-[40px] md:ml-[-120px]">
+
+            <img
+              src="/logo.png"
+              className="h-56 md:h-64 lg:h-80 object-contain"
+            />
+
+          </div>
+
+          <div className="bg-gradient-to-r from-black via-gray-900 to-black text-white rounded-xl px-6 py-3 shadow-md w-[340px] md:w-[420px] h-[60px] flex items-center">
+
+            <p className="text-sm md:text-base font-semibold tracking-wide">
+              {quotes[currentQuote]}
+            </p>
+
+          </div>
+
+          <h2 className="text-5xl font-bold leading-tight">
+            Premium Jewelry
+            <br />
+            Built for Everyday Luxury
+          </h2>
+
+          <p className="text-gray-600 text-lg">
+            Waterproof • Anti-Tarnish • Modern Minimal Designs
+          </p>
+
+          <div className="flex gap-4">
+
+            <a
+              href="#shop"
+              className="bg-black text-white px-6 py-3 rounded-lg"
+            >
+              Shop Now
+            </a>
+
+            <a
+              href="https://wa.me/918055100913"
+              className="flex items-center gap-2 border px-6 py-3 rounded-lg"
+            >
+              <FaWhatsapp className="text-green-500 text-lg" />
+              WhatsApp Us
+            </a>
+
+          </div>
+
+        </div>
+
+        <div className="relative w-full h-[480px] md:h-[560px] lg:h-[700px]">
+
+          {heroImages.map((img, index) => (
+            <img
+              key={index}
+              src={img}
+              onError={(e) => (e.currentTarget.src = heroImages[0])}
+              className={`absolute inset-0 w-full h-full object-cover rounded-2xl transition-all duration-1000 ${index === currentImage ? 'opacity-100 z-10' : 'opacity-0'}`}
+            />
+          ))}
+
+        </div>
+
+      </section>
+
+      {/* PRODUCTS */}
+      <section id="shop" className="px-6 md:px-12 py-20">
+
+        <h3 className="text-3xl font-bold mb-14">
+          Shop By Categories
+        </h3>
+
+        {categories.map((category) => {
+
+          const filteredProducts = products.filter(
+            (p) => p.category === category
+          )
+
+          if (filteredProducts.length === 0) return null
+
+          return (
+            <div
+              key={category}
+              ref={(el) => {
+                categoryRefs.current[category] = el
+              }}
+              className="mb-20"
+            >
+
+              <h4 className="text-2xl font-bold mb-8">
+                {category}
+              </h4>
+
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-10">
+
+                {filteredProducts.map((p) => (
+                  <ProductCard key={p.id} product={p} />
+                ))}
+
+              </div>
+
+            </div>
+          )
+        })}
+
+      </section>
+
     </main>
   )
 }
