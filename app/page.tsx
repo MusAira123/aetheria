@@ -34,21 +34,21 @@ function ProductCard({ product }: any) {
 
   return (
     <div
-      className="group relative overflow-hidden rounded-[72%_28%_58%_42%/38%_66%_34%_62%] p-[1px] transition-all duration-700 hover:-translate-y-6 hover:rotate-[-3deg]"
+      className="group relative overflow-hidden rounded-3xl p-[1px] transition-all duration-500 hover:-translate-y-2"
     >
 
       {/* SNAKE BORDER */}
-      <div className="absolute inset-0 rounded-[72%_28%_58%_42%/38%_66%_34%_62%] opacity-0 group-hover:opacity-100 transition duration-500 overflow-hidden">
+      <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition duration-500 overflow-hidden">
 
         <div className="absolute inset-[-200%] animate-snake-border bg-[conic-gradient(from_0deg,_transparent,_transparent,_#d4af37,_transparent,_transparent)]"></div>
 
       </div>
 
       {/* CARD */}
-      <div className="relative bg-white overflow-hidden rounded-[72%_28%_58%_42%/38%_66%_34%_62%] min-h-[620px] z-10 shadow-sm group-hover:shadow-[0_35px_90px_rgba(0,0,0,0.25)] transition-all duration-700 flex flex-col">
+      <div className="relative bg-white overflow-hidden rounded-3xl min-h-[620px] z-10 shadow-md hover:shadow-2xl transition-all duration-500 flex flex-col">
 
         {/* IMAGE */}
-        <div className="relative w-full h-[360px] overflow-hidden flex items-center justify-center bg-black">
+        <div className="relative w-full h-[220px] md:h-[360px] overflow-hidden flex items-center justify-center bg-black">
 
           {/* IMAGE SLIDER */}
           {images.map((img: string, index: number) => (
@@ -71,7 +71,7 @@ function ProductCard({ product }: any) {
           {images.length > 1 && (
             <button
               onClick={prevImage}
-              className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-md hover:bg-white/40 text-white border border-white/30 w-11 h-11 rounded-full flex items-center justify-center text-2xl transition-all duration-300 z-20"
+              className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-md hover:bg-white/40 text-white border border-white/30 w-8 h-8 md:w-11 md:h-11 rounded-full flex items-center justify-center text-lg md:text-2xl transition-all duration-300 z-20"
             >
               ‹
             </button>
@@ -81,7 +81,7 @@ function ProductCard({ product }: any) {
           {images.length > 1 && (
             <button
               onClick={nextImage}
-              className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-md hover:bg-white/40 text-white border border-white/30 w-11 h-11 rounded-full flex items-center justify-center text-2xl transition-all duration-300 z-20"
+              className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-md hover:bg-white/40 text-white border border-white/30 w-8 h-8 md:w-11 md:h-11 rounded-full flex items-center justify-center text-lg md:text-2xl transition-all duration-300 z-20"
             >
               ›
             </button>
@@ -89,7 +89,7 @@ function ProductCard({ product }: any) {
 
           {/* IMAGE DOTS */}
           {images.length > 1 && (
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-20">
 
               {images.map((_: any, index: number) => (
                 <div
@@ -97,7 +97,7 @@ function ProductCard({ product }: any) {
                   className={`transition-all duration-300 rounded-full
                   ${
                     index === current
-                      ? 'w-6 h-2 bg-white'
+                      ? 'w-5 h-2 bg-white'
                       : 'w-2 h-2 bg-white/50'
                   }`}
                 />
@@ -109,15 +109,15 @@ function ProductCard({ product }: any) {
         </div>
 
         {/* CONTENT */}
-        <div className="flex-1 flex flex-col justify-between p-8 text-center">
+        <div className="flex-1 flex flex-col justify-between p-4 md:p-8 text-center">
 
           <div>
 
-            <h4 className="font-semibold text-2xl leading-snug">
+            <h4 className="font-semibold text-sm md:text-2xl leading-snug">
               {product.name}
             </h4>
 
-            <p className="text-gray-600 text-sm mt-3 leading-relaxed px-2">
+            <p className="text-gray-600 text-[11px] md:text-sm mt-3 leading-relaxed px-2">
               {product.description}
             </p>
 
@@ -125,17 +125,17 @@ function ProductCard({ product }: any) {
 
           <div className="mt-6">
 
-            <p className="font-bold text-2xl">
+            <p className="font-bold text-lg md:text-2xl">
               ₹{product.price}
             </p>
 
-            <p className="text-sm mt-2 text-gray-700">
+            <p className="text-[11px] md:text-sm mt-2 text-gray-700">
               Available Qty: {product.qty}
             </p>
 
             <a
               href={`https://wa.me/918055100913?text=Hi, I want ${product.name}`}
-              className="inline-block mt-6 bg-green-600 text-white px-4 py-3 rounded-2xl w-full text-center transition-all duration-300 hover:bg-green-700"
+              className="inline-block mt-4 md:mt-6 bg-green-600 text-white px-4 py-2 md:py-3 rounded-2xl w-full text-center text-xs md:text-base transition-all duration-300 hover:bg-green-700"
             >
               Buy on WhatsApp
             </a>
@@ -239,10 +239,42 @@ export default function Home() {
               <FaHome className="text-sm mt-1" />
             </a>
 
-            <a href="#shop" className="flex flex-col items-center hover:text-yellow-400 transition">
-              <span>Products</span>
-              <FaBoxOpen className="text-sm mt-1" />
-            </a>
+            {/* PRODUCTS DROPDOWN */}
+            <div className="relative group">
+
+              <a
+                href="#shop"
+                className="flex flex-col items-center hover:text-yellow-400 transition"
+              >
+                <span>Products</span>
+                <FaBoxOpen className="text-sm mt-1" />
+              </a>
+
+              {/* DROPDOWN */}
+              <div className="absolute left-0 top-full mt-3 hidden group-hover:block bg-black border border-white/10 rounded-2xl overflow-hidden min-w-[220px] shadow-2xl z-50">
+
+                {categories.map((cat) => (
+                  <button
+                    key={cat}
+                    onClick={() => {
+                      const element = categoryRefs.current[cat]
+
+                      if (element) {
+                        element.scrollIntoView({
+                          behavior: 'smooth',
+                          block: 'start',
+                        })
+                      }
+                    }}
+                    className="w-full text-left px-5 py-3 text-sm hover:bg-white/10 transition"
+                  >
+                    {cat}
+                  </button>
+                ))}
+
+              </div>
+
+            </div>
 
             <a href="#story" className="flex flex-col items-center hover:text-yellow-400 transition">
               <span>Our Story</span>
@@ -392,7 +424,7 @@ export default function Home() {
                 {category}
               </h4>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-10">
 
                 {filteredProducts.map((p) => (
                   <ProductCard key={p.id} product={p} />
@@ -405,254 +437,6 @@ export default function Home() {
         })}
 
       </section>
-
-      {/* STORY */}
-      <section id="story" className="px-6 md:px-12 py-20 bg-gray-50">
-
-        <h3 className="text-3xl font-bold mb-6">
-          Our Story
-        </h3>
-
-        <p className="text-gray-600 max-w-4xl leading-relaxed text-lg">
-
-          At Aetheria, we believe every girl deserves to feel beautiful,
-          confident, and special — every single day ✨
-
-          <br /><br />
-
-          Jewellery is not just an accessory for us, it’s a feeling.
-          <br />
-          A little sparkle for college days, a touch of elegance for festivals,
-          and confidence for everyday moments 🤍
-
-          <br /><br />
-
-          We started Aetheria with one simple dream — to create premium quality
-          jewellery that looks luxurious but stays affordable for every girl.
-          Because looking beautiful shouldn’t come with a heavy price tag.
-
-          <br /><br />
-
-          From daily wear essentials to statement pieces, every design is chosen
-          with love, care, and attention to quality 💎
-
-          <br /><br />
-
-          We want our jewellery to become a part of your memories —
-          your first college fest, your favourite outfit, your special moments.
-
-          <br /><br />
-
-          At Aetheria, you’re not just buying jewellery…
-          <br />
-          You’re wearing confidence, elegance, and a little piece of magic ✨🦋
-
-        </p>
-
-      </section>
-
-      {/* SHIPPING POLICY */}
-      <section className="px-6 md:px-12 py-20">
-
-        <div className="max-w-4xl">
-
-          <h3 className="text-3xl font-bold mb-8">
-            Shipping Policy
-          </h3>
-
-          <p className="text-gray-600 leading-relaxed mb-6">
-            Thank you for shopping with <span className="font-semibold">Aetheria</span> ✨
-            <br /><br />
-            We’re committed to delivering your jewellery safely and beautifully packed right to your doorstep 💌
-          </p>
-
-          <p className="text-gray-600 leading-relaxed mb-6">
-            Once your order is confirmed, it will be carefully processed and dispatched within
-            <span className="font-semibold"> 2 working days</span>.
-            <br /><br />
-            After dispatch, delivery usually takes around
-            <span className="font-semibold"> 6–7 working days</span>,
-            depending on your location and courier availability.
-          </p>
-
-          <p className="text-gray-600 leading-relaxed mb-10">
-            We work with trusted delivery partners to ensure your order reaches you in perfect condition 🤍
-          </p>
-
-          <h4 className="text-2xl font-bold mb-5">
-            Shipping Charges
-          </h4>
-
-          <div className="bg-gray-50 rounded-2xl p-6 border border-gray-200 mb-10">
-
-            <ul className="space-y-4 text-gray-700 leading-relaxed">
-
-              <li>
-                • A standard shipping fee of
-                <span className="font-semibold"> ₹40</span>
-                is applicable on orders below
-                <span className="font-semibold"> ₹599</span>.
-              </li>
-
-              <li>
-                • Enjoy
-                <span className="font-semibold"> FREE SHIPPING</span>
-                on all orders above
-                <span className="font-semibold"> ₹599</span> ✨
-              </li>
-
-              <li>
-                • Shipping charges are non-refundable once the order is shipped.
-              </li>
-
-            </ul>
-
-          </div>
-
-          <h4 className="text-2xl font-bold mb-5">
-            Important Information
-          </h4>
-
-          <div className="space-y-4 text-gray-600 leading-relaxed">
-
-            <p>
-              • Delivery timelines may vary slightly during sales, festivals,
-              or due to courier delays.
-            </p>
-
-            <p>
-              • Please make sure your address and contact details are entered
-              correctly while placing the order.
-            </p>
-
-            <p>
-              • Once your order is dispatched, tracking details will be shared with you.
-            </p>
-
-            <p>
-              For any queries related to your order, feel free to contact us on Instagram DM 💖
-            </p>
-
-          </div>
-
-        </div>
-
-      </section>
-
-      {/* INSTAGRAM */}
-      <section className="px-6 md:px-12 py-20 text-center">
-
-        <h3 className="text-3xl font-bold mb-4">
-          Follow Us on Instagram
-        </h3>
-
-        <p className="mb-6 text-gray-600">
-          @_aetheria___
-        </p>
-
-        <div className="flex justify-center">
-
-          <img
-            src="/insta-qr.jpg"
-            className="w-64 rounded-xl shadow-lg border"
-          />
-
-        </div>
-
-      </section>
-
-      {/* FOOTER */}
-      <footer
-        id="contact"
-        className="bg-black text-white px-6 md:px-12 py-10 mt-18 rounded-t-3xl"
-      >
-
-        <div className="grid md:grid-cols-4 gap-25">
-
-          <div>
-
-            <img
-              src="/logo.png"
-              className="h-25 mb-1"
-            />
-
-            <p className="text-gray-400 text-sm leading-relaxed">
-              Aetheria brings modern luxury jewelry designed for everyday wear.
-              Durable, elegant, and timeless.
-            </p>
-
-          </div>
-
-          <div>
-
-            <h4 className="text-lg font-semibold mb-4">
-              Quick Links
-            </h4>
-
-            <ul className="space-y-2 text-sm text-gray-400">
-              <li><a href="#">Home</a></li>
-              <li><a href="#shop">Products</a></li>
-              <li><a href="#story">Our Story</a></li>
-              <li><a href="#contact">Contact</a></li>
-            </ul>
-
-          </div>
-
-          <div>
-
-            <h4 className="text-lg font-semibold mb-4">
-              Why Choose Us
-            </h4>
-
-            <ul className="space-y-2 text-sm text-gray-400">
-              <li>✨ Waterproof Jewelry</li>
-              <li>✨ Anti-Tarnish</li>
-              <li>✨ Premium Quality</li>
-              <li>✨ Hypoallergenic</li>
-              <li>✨ Long Lasting Shine</li>
-            </ul>
-
-          </div>
-
-          <div>
-
-            <h4 className="text-lg font-semibold mb-4">
-              Contact
-            </h4>
-
-            <p className="text-gray-400 text-sm">
-              📞 +91 8055100913
-            </p>
-
-            <div className="flex gap-6 mt-4 items-center">
-
-              <a
-                href="https://www.instagram.com/_aetheria___"
-                className="flex items-center gap-2 hover:text-pink-400"
-              >
-                <FaInstagram className="text-xl" />
-                Instagram
-              </a>
-
-              <a
-                href="https://wa.me/918055100913"
-                className="flex items-center gap-2 hover:text-green-400"
-              >
-                <FaWhatsapp className="text-xl" />
-                WhatsApp
-              </a>
-
-            </div>
-
-          </div>
-
-        </div>
-
-        <div className="border-t border-gray-800 mt-12 pt-6 text-center text-gray-500 text-sm">
-          © 2026 Aetheria. Crafted with elegance.
-        </div>
-
-      </footer>
 
     </main>
   )
