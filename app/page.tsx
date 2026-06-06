@@ -97,10 +97,8 @@ function ImageLightbox({
       }`}
       onClick={onClose}
     >
-      {/* Optional subtle gradient overlay (very light) */}
       <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-black/10 pointer-events-none" />
 
-      {/* Close button */}
       <button
         onClick={onClose}
         className="absolute top-4 right-4 md:top-6 md:right-6 text-white bg-black/30 hover:bg-black/50 backdrop-blur-md rounded-full p-2 md:p-3 transition-all duration-300 z-20 hover:scale-110"
@@ -108,7 +106,6 @@ function ImageLightbox({
         <FaTimes className="text-xl md:text-2xl" />
       </button>
 
-      {/* Download button */}
       <button
         onClick={handleDownload}
         className="absolute top-4 right-20 md:top-6 md:right-24 text-white bg-black/30 hover:bg-black/50 backdrop-blur-md rounded-full p-2 md:p-3 transition-all duration-300 z-20 hover:scale-110"
@@ -116,12 +113,10 @@ function ImageLightbox({
         <FaDownload className="text-lg md:text-xl" />
       </button>
 
-      {/* Product name - glassmorphic */}
       <div className="absolute top-6 left-1/2 -translate-x-1/2 bg-black/40 backdrop-blur-md px-4 py-2 rounded-full text-white text-sm md:text-base font-medium z-20 whitespace-nowrap max-w-[80vw] truncate shadow-lg">
         {productName}
       </div>
 
-      {/* Main Image Container */}
       <div
         className="relative w-full h-full flex items-center justify-center p-4 md:p-8"
         onClick={(e) => e.stopPropagation()}
@@ -205,7 +200,7 @@ function ImageLightbox({
   )
 }
 
-// ==================== PRODUCT CARD (unchanged) ====================
+// ==================== PRODUCT CARD ====================
 function ProductCard({ product }: any) {
   const [current, setCurrent] = useState(0)
   const [lightboxOpen, setLightboxOpen] = useState(false)
@@ -342,7 +337,7 @@ function ProductCard({ product }: any) {
   )
 }
 
-// ==================== MAIN HOME PAGE (unchanged) ====================
+// ==================== MAIN HOME PAGE ====================
 export default function Home() {
   const [products, setProducts] = useState<any[]>([])
   const [currentImage, setCurrentImage] = useState(0)
@@ -410,6 +405,7 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-white text-gray-900">
+      {/* HEADER */}
       <header className="sticky top-0 z-50 bg-black/95 backdrop-blur-md text-white px-6 md:px-12 py-4 rounded-b-3xl">
         <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
           <nav className="flex flex-wrap gap-6 text-[11px] md:text-sm font-semibold tracking-[0.18em] uppercase">
@@ -470,6 +466,7 @@ export default function Home() {
         </div>
       </header>
 
+      {/* TRUST STRIP */}
       <section className="sticky top-[72px] z-40 overflow-hidden bg-gradient-to-r from-yellow-50 via-white to-yellow-50 py-6">
         <div className="flex animate-marquee whitespace-nowrap gap-16 text-sm md:text-base font-semibold text-gray-800">
           {[...Array(2)].map((_, i) => (
@@ -486,6 +483,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* HERO */}
       <section className="px-6 md:px-12 py-20 grid md:grid-cols-2 gap-10 items-center">
         <div className="flex flex-col gap-6">
           <div className="w-full flex justify-start ml-[40px] md:ml-[-120px]">
@@ -522,6 +520,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* PRODUCTS */}
       <section id="shop" className="px-6 md:px-12 py-20">
         <h3 className="text-3xl font-bold mb-14">Shop By Categories</h3>
         {categories.map((category) => {
@@ -543,6 +542,75 @@ export default function Home() {
           )
         })}
       </section>
+
+      {/* STORY SECTION */}
+      <section id="story" className="px-6 md:px-12 py-20 bg-gray-50">
+        <h3 className="text-3xl font-bold mb-6">Our Story</h3>
+        <p className="text-gray-600 max-w-3xl leading-relaxed">
+          Aetheria was created to bring everyday luxury into modern life.
+          Jewelry should not be reserved for occasions — it should be worn daily.
+          <br /><br />
+          Our pieces are waterproof, anti-tarnish, and crafted to last.
+          <br /><br />
+          We create more than jewelry — we create confidence.
+        </p>
+      </section>
+
+      {/* INSTAGRAM SECTION */}
+      <section className="px-6 md:px-12 py-20 text-center">
+        <h3 className="text-3xl font-bold mb-4">Follow Us on Instagram</h3>
+        <p className="mb-6 text-gray-600">@_aetheria___</p>
+        <div className="flex justify-center">
+          <img src="/insta-qr.jpg" className="w-64 rounded-xl shadow-lg border" />
+        </div>
+      </section>
+
+      {/* ==================== FOOTER ==================== */}
+      <footer id="contact" className="bg-black text-white px-6 md:px-12 py-10 mt-16 rounded-t-4xl">
+        <div className="grid md:grid-cols-4 gap-8 md:gap-12">
+          <div>
+            <img src="/logo.png" className="h-20 mb-4" />
+            <p className="text-gray-400 text-sm leading-relaxed">
+              Aetheria brings modern luxury jewelry designed for everyday wear.
+              Durable, elegant, and timeless.
+            </p>
+          </div>
+          <div>
+            <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
+            <ul className="space-y-2 text-sm text-gray-400">
+              <li><a href="#" className="hover:text-yellow-400 transition">Home</a></li>
+              <li><a href="#shop" className="hover:text-yellow-400 transition">Products</a></li>
+              <li><a href="#story" className="hover:text-yellow-400 transition">Our Story</a></li>
+              <li><a href="#contact" className="hover:text-yellow-400 transition">Contact</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="text-lg font-semibold mb-4">Why Choose Us</h4>
+            <ul className="space-y-2 text-sm text-gray-400">
+              <li>✨ Waterproof Jewelry</li>
+              <li>✨ Anti-Tarnish</li>
+              <li>✨ Premium Quality</li>
+              <li>✨ Hypoallergenic</li>
+              <li>✨ Long Lasting Shine</li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="text-lg font-semibold mb-4">Contact</h4>
+            <p className="text-gray-400 text-sm">📞 +91 9028513130</p>
+            <p className="text-gray-400 text-sm mt-3">
+              📍 Bagban Complex, Peersha Khunt,<br />
+              AhilyNagar (AhmedNagar), 414001
+            </p>
+            <div className="flex gap-4 mt-4">
+              <a href="https://www.instagram.com/_aetheria___" target="_blank" rel="noopener noreferrer" className="hover:text-yellow-400 transition">Instagram</a>
+              <a href="https://wa.me/919028513130" target="_blank" rel="noopener noreferrer" className="hover:text-yellow-400 transition">WhatsApp</a>
+            </div>
+          </div>
+        </div>
+        <div className="border-t border-gray-800 mt-12 pt-6 text-center text-gray-500 text-sm">
+          © 2026 Aetheria. Crafted with elegance.
+        </div>
+      </footer>
 
       <style jsx global>{`
         @keyframes marquee {
