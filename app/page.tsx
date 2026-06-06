@@ -17,7 +17,7 @@ import {
   FaDownload
 } from 'react-icons/fa'
 
-// ==================== ATTRACTIVE LIGHTBOX MODAL ====================
+// ==================== ATTRACTIVE LIGHTBOX MODAL (FIXED ZOOM ISSUE) ====================
 function ImageLightbox({
   images,
   initialIndex,
@@ -56,10 +56,12 @@ function ImageLightbox({
 
   const goPrev = () => {
     setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1))
+    setIsZoomed(false) // Reset zoom when changing image
   }
 
   const goNext = () => {
     setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1))
+    setIsZoomed(false)
   }
 
   // Touch swipe handlers
@@ -86,6 +88,11 @@ function ImageLightbox({
     document.body.removeChild(link)
   }
 
+  const toggleZoom = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setIsZoomed(!isZoomed)
+  }
+
   return (
     <div
       className={`fixed inset-0 z-[100] flex items-center justify-center transition-all duration-500 ${
@@ -96,7 +103,7 @@ function ImageLightbox({
       {/* Animated gradient background */}
       <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-black/80 to-gold-500/10 pointer-events-none" />
 
-      {/* Close button - elegant floating */}
+      {/* Close button */}
       <button
         onClick={onClose}
         className="absolute top-4 right-4 md:top-6 md:right-6 text-white/70 hover:text-white bg-white/10 hover:bg-white/20 rounded-full p-2 md:p-3 backdrop-blur-md transition-all duration-300 z-20 hover:scale-110"
@@ -112,65 +119,65 @@ function ImageLightbox({
         <FaDownload className="text-lg md:text-xl" />
       </button>
 
-      {/* Product name - elegant glass bar */}
+      {/* Product name */}
       <div className="absolute top-6 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full text-white/90 text-sm md:text-base font-medium z-20 whitespace-nowrap max-w-[80vw] truncate shadow-lg">
         {productName}
       </div>
 
       {/* Main Image Container */}
       <div
-        className="relative w-full h-full flex items-center justify-center p-4 md:p-8 cursor-zoom-in"
+        className="relative w-full h-full flex items-center justify-center p-4 md:p-8"
         onClick={(e) => e.stopPropagation()}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
+        {/* Image wrapper with zoom toggle */}
         <div
-          className={`transition-all duration-500 ease-out ${
+          className={`transition-all duration-300 ease-out cursor-zoom-in ${
             isZoomed ? 'scale-150' : 'scale-100'
           }`}
-          onClick={() => setIsZoomed(!isZoomed)}
+          onClick={toggleZoom}
+          style={{ willChange: 'transform' }}
         >
           <img
             src={images[currentIndex]}
             alt={`${productName} view ${currentIndex + 1}`}
-            className="max-w-full max-h-full object-contain rounded-2xl shadow-2xl transition-all duration-300"
+            className="max-h-[85vh] max-w-[90vw] object-contain rounded-2xl shadow-2xl"
           />
         </div>
 
-        {/* Previous Button - with glow effect */}
+        {/* Navigation Buttons */}
         {images.length > 1 && (
-          <button
-            onClick={(e) => {
-              e.stopPropagation()
-              goPrev()
-            }}
-            className="absolute left-2 md:left-6 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/30 text-white rounded-full p-3 md:p-5 backdrop-blur-md transition-all duration-300 hover:scale-110 hover:shadow-glow group"
-          >
-            <FaChevronLeft className="text-xl md:text-3xl group-hover:-translate-x-0.5 transition-transform" />
-          </button>
+          <>
+            <button
+              onClick={(e) => {
+                e.stopPropagation()
+                goPrev()
+              }}
+              className="absolute left-2 md:left-6 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/30 text-white rounded-full p-3 md:p-5 backdrop-blur-md transition-all duration-300 hover:scale-110 hover:shadow-glow group"
+            >
+              <FaChevronLeft className="text-xl md:text-3xl group-hover:-translate-x-0.5 transition-transform" />
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation()
+                goNext()
+              }}
+              className="absolute right-2 md:right-6 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/30 text-white rounded-full p-3 md:p-5 backdrop-blur-md transition-all duration-300 hover:scale-110 hover:shadow-glow group"
+            >
+              <FaChevronRight className="text-xl md:text-3xl group-hover:translate-x-0.5 transition-transform" />
+            </button>
+          </>
         )}
 
-        {/* Next Button */}
-        {images.length > 1 && (
-          <button
-            onClick={(e) => {
-              e.stopPropagation()
-              goNext()
-            }}
-            className="absolute right-2 md:right-6 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/30 text-white rounded-full p-3 md:p-5 backdrop-blur-md transition-all duration-300 hover:scale-110 hover:shadow-glow group"
-          >
-            <FaChevronRight className="text-xl md:text-3xl group-hover:translate-x-0.5 transition-transform" />
-          </button>
-        )}
-
-        {/* Image Counter - elegant pill */}
+        {/* Image counter */}
         {images.length > 1 && (
           <div className="absolute bottom-24 left-1/2 -translate-x-1/2 bg-black/50 backdrop-blur-md text-white px-4 py-1.5 rounded-full text-xs md:text-sm font-mono tracking-wide">
             {String(currentIndex + 1).padStart(2, '0')} / {String(images.length).padStart(2, '0')}
           </div>
         )}
 
-        {/* Dots indicator - animated */}
+        {/* Dots indicator */}
         {images.length > 1 && (
           <div className="absolute bottom-32 left-1/2 -translate-x-1/2 flex gap-3 z-20">
             {images.map((_, idx) => (
@@ -179,6 +186,7 @@ function ImageLightbox({
                 onClick={(e) => {
                   e.stopPropagation()
                   setCurrentIndex(idx)
+                  setIsZoomed(false)
                 }}
                 className={`transition-all duration-300 rounded-full ${
                   idx === currentIndex
@@ -196,7 +204,6 @@ function ImageLightbox({
         </div>
       </div>
 
-      {/* Add custom style for glow shadow */}
       <style jsx>{`
         .hover\\:shadow-glow:hover {
           box-shadow: 0 0 15px rgba(255,215,0,0.5);
@@ -206,7 +213,7 @@ function ImageLightbox({
   )
 }
 
-// ==================== PRODUCT CARD (with improved hover effects) ====================
+// ==================== PRODUCT CARD ====================
 function ProductCard({ product }: any) {
   const [current, setCurrent] = useState(0)
   const [lightboxOpen, setLightboxOpen] = useState(false)
@@ -237,14 +244,12 @@ function ProductCard({ product }: any) {
   return (
     <>
       <div className="group relative overflow-hidden rounded-3xl p-[1px] transition-all duration-500 hover:-translate-y-2">
-        {/* Animated snake border */}
         <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition duration-500 overflow-hidden">
           <div className="absolute inset-[-200%] animate-snake-border bg-[conic-gradient(from_0deg,_transparent,_transparent,_#d4af37,_transparent,_transparent)]"></div>
         </div>
 
-        {/* Card */}
         <div className="relative bg-white overflow-hidden rounded-3xl z-10 shadow-md hover:shadow-2xl transition-all duration-500 flex flex-col">
-          {/* Image area - clickable */}
+          {/* Image area */}
           <div
             className="relative w-full h-[190px] md:h-[360px] overflow-hidden flex items-center justify-center bg-black cursor-pointer group/image"
             onClick={openLightbox}
@@ -262,10 +267,8 @@ function ProductCard({ product }: any) {
               />
             ))}
 
-            {/* Dark gradient overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent z-10 pointer-events-none" />
 
-            {/* Buttons - visible on hover */}
             {images.length > 1 && (
               <>
                 <button
@@ -283,7 +286,6 @@ function ProductCard({ product }: any) {
               </>
             )}
 
-            {/* Dots */}
             {images.length > 1 && (
               <div
                 className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-2 z-20"
@@ -307,13 +309,11 @@ function ProductCard({ product }: any) {
               </div>
             )}
 
-            {/* Expand icon hint */}
             <div className="absolute bottom-2 right-2 bg-black/50 backdrop-blur-sm rounded-full p-1.5 opacity-0 group-hover/image:opacity-100 transition-opacity z-20 pointer-events-none">
               <FaExpand className="text-white text-xs" />
             </div>
           </div>
 
-          {/* Content */}
           <div className="flex-1 flex flex-col justify-between p-3 md:p-8 text-center">
             <div>
               <h4 className="font-semibold text-[13px] md:text-2xl leading-snug">
@@ -351,7 +351,7 @@ function ProductCard({ product }: any) {
   )
 }
 
-// ==================== MAIN HOME PAGE (unchanged but included) ====================
+// ==================== MAIN HOME PAGE ====================
 export default function Home() {
   const [products, setProducts] = useState<any[]>([])
   const [currentImage, setCurrentImage] = useState(0)
@@ -419,7 +419,6 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-white text-gray-900">
-      {/* Header */}
       <header className="sticky top-0 z-50 bg-black/95 backdrop-blur-md text-white px-6 md:px-12 py-4 rounded-b-3xl">
         <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
           <nav className="flex flex-wrap gap-6 text-[11px] md:text-sm font-semibold tracking-[0.18em] uppercase">
@@ -480,7 +479,6 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Trust strip */}
       <section className="sticky top-[72px] z-40 overflow-hidden bg-gradient-to-r from-yellow-50 via-white to-yellow-50 py-6">
         <div className="flex animate-marquee whitespace-nowrap gap-16 text-sm md:text-base font-semibold text-gray-800">
           {[...Array(2)].map((_, i) => (
@@ -497,7 +495,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Hero */}
       <section className="px-6 md:px-12 py-20 grid md:grid-cols-2 gap-10 items-center">
         <div className="flex flex-col gap-6">
           <div className="w-full flex justify-start ml-[40px] md:ml-[-120px]">
@@ -534,7 +531,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Products */}
       <section id="shop" className="px-6 md:px-12 py-20">
         <h3 className="text-3xl font-bold mb-14">Shop By Categories</h3>
         {categories.map((category) => {
@@ -557,7 +553,6 @@ export default function Home() {
         })}
       </section>
 
-      {/* Add marquee animation */}
       <style jsx global>{`
         @keyframes marquee {
           0% { transform: translateX(0%); }
