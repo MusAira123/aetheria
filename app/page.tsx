@@ -9,12 +9,7 @@ import {
   FaBoxOpen,
   FaBookOpen,
   FaPhone,
-  FaSearch,
-  FaEnvelope,
-  FaMapMarkerAlt,
-  FaFacebookF,
-  FaTwitter,
-  FaArrowUp
+  FaSearch
 } from 'react-icons/fa'
 
 function ProductCard({ product }: any) {
@@ -39,11 +34,19 @@ function ProductCard({ product }: any) {
 
   return (
     <div className="group relative overflow-hidden rounded-3xl p-[1px] transition-all duration-500 hover:-translate-y-2">
+
+      {/* SNAKE BORDER */}
       <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition duration-500 overflow-hidden">
         <div className="absolute inset-[-200%] animate-snake-border bg-[conic-gradient(from_0deg,_transparent,_transparent,_#d4af37,_transparent,_transparent)]"></div>
       </div>
+
+      {/* CARD */}
       <div className="relative bg-white overflow-hidden rounded-3xl z-10 shadow-md hover:shadow-2xl transition-all duration-500 flex flex-col">
+
+        {/* IMAGE */}
         <div className="relative w-full h-[190px] md:h-[360px] overflow-hidden flex items-center justify-center bg-black">
+
+          {/* IMAGE SLIDER */}
           {images.map((img: string, index: number) => (
             <img
               key={index}
@@ -56,7 +59,11 @@ function ProductCard({ product }: any) {
               }`}
             />
           ))}
+
+          {/* DARK OVERLAY */}
           <div className="absolute inset-0 bg-black/10 z-10"></div>
+
+          {/* PREVIOUS BUTTON */}
           {images.length > 1 && (
             <button
               onClick={prevImage}
@@ -65,6 +72,8 @@ function ProductCard({ product }: any) {
               ‹
             </button>
           )}
+
+          {/* NEXT BUTTON */}
           {images.length > 1 && (
             <button
               onClick={nextImage}
@@ -73,6 +82,8 @@ function ProductCard({ product }: any) {
               ›
             </button>
           )}
+
+          {/* IMAGE DOTS */}
           {images.length > 1 && (
             <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-2 z-20">
               {images.map((_: any, index: number) => (
@@ -88,7 +99,10 @@ function ProductCard({ product }: any) {
               ))}
             </div>
           )}
+
         </div>
+
+        {/* CONTENT */}
         <div className="flex-1 flex flex-col justify-between p-3 md:p-8 text-center">
           <div>
             <h4 className="font-semibold text-[13px] md:text-2xl leading-snug">
@@ -99,9 +113,7 @@ function ProductCard({ product }: any) {
             </p>
           </div>
           <div className="mt-3 md:mt-6">
-            <p className="font-bold text-base md:text-2xl">
-              ₹{product.price}
-            </p>
+            <p className="font-bold text-base md:text-2xl">₹{product.price}</p>
             <p className="text-[10px] md:text-sm mt-1 md:mt-2 text-gray-700">
               Available Qty: {product.qty}
             </p>
@@ -113,7 +125,9 @@ function ProductCard({ product }: any) {
             </a>
           </div>
         </div>
+
       </div>
+
     </div>
   )
 }
@@ -124,7 +138,6 @@ export default function Home() {
   const [currentQuote, setCurrentQuote] = useState(0)
   const [search, setSearch] = useState('')
   const [dropdownOpen, setDropdownOpen] = useState(false)
-  const [showBackToTop, setShowBackToTop] = useState(false)
 
   const categoryRefs = useRef<any>({})
 
@@ -169,7 +182,6 @@ export default function Home() {
 
     if (matchingProduct?.category) {
       const element = categoryRefs.current[matchingProduct.category]
-
       if (element) {
         element.scrollIntoView({
           behavior: 'smooth',
@@ -178,19 +190,6 @@ export default function Home() {
       }
     }
   }, [search, products])
-
-  // Back to top button visibility
-  useEffect(() => {
-    const handleScroll = () => {
-      setShowBackToTop(window.scrollY > 500)
-    }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
 
   const fetchProducts = async () => {
     const { data } = await supabase.from('products').select('*')
@@ -222,18 +221,13 @@ export default function Home() {
               onMouseEnter={() => setDropdownOpen(true)}
               onMouseLeave={() => setDropdownOpen(false)}
             >
-              <a
-                href="#shop"
-                className="flex flex-col items-center hover:text-yellow-400 transition"
-              >
+              <a href="#shop" className="flex flex-col items-center hover:text-yellow-400 transition">
                 <span>Products</span>
                 <FaBoxOpen className="text-sm mt-1" />
               </a>
               <div
                 className={`absolute left-0 top-full pt-2 min-w-[220px] z-50 transition-all duration-200 ${
-                  dropdownOpen
-                    ? 'opacity-100 visible'
-                    : 'opacity-0 invisible'
+                  dropdownOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
                 }`}
               >
                 <div className="bg-black border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
@@ -301,10 +295,7 @@ export default function Home() {
       <section className="px-6 md:px-12 py-20 grid md:grid-cols-2 gap-10 items-center">
         <div className="flex flex-col gap-6">
           <div className="w-full flex justify-start ml-[40px] md:ml-[-120px]">
-            <img
-              src="/logo.png"
-              className="h-56 md:h-64 lg:h-80 object-contain"
-            />
+            <img src="/logo.png" className="h-56 md:h-64 lg:h-80 object-contain" />
           </div>
           <div className="bg-gradient-to-r from-black via-gray-900 to-black text-white rounded-xl px-6 py-3 shadow-md w-[340px] md:w-[420px] h-[60px] flex items-center">
             <p className="text-sm md:text-base font-semibold tracking-wide">
@@ -320,16 +311,10 @@ export default function Home() {
             Waterproof • Anti-Tarnish • Modern Minimal Designs
           </p>
           <div className="flex gap-4">
-            <a
-              href="#shop"
-              className="bg-black text-white px-6 py-3 rounded-lg"
-            >
+            <a href="#shop" className="bg-black text-white px-6 py-3 rounded-lg">
               Shop Now
             </a>
-            <a
-              href="https://wa.me/918055100913"
-              className="flex items-center gap-2 border px-6 py-3 rounded-lg"
-            >
+            <a href="https://wa.me/918055100913" className="flex items-center gap-2 border px-6 py-3 rounded-lg">
               <FaWhatsapp className="text-green-500 text-lg" />
               WhatsApp Us
             </a>
@@ -349,25 +334,17 @@ export default function Home() {
 
       {/* PRODUCTS */}
       <section id="shop" className="px-6 md:px-12 py-20">
-        <h3 className="text-3xl font-bold mb-14">
-          Shop By Categories
-        </h3>
+        <h3 className="text-3xl font-bold mb-14">Shop By Categories</h3>
         {categories.map((category) => {
-          const filteredProducts = products.filter(
-            (p) => p.category === category
-          )
+          const filteredProducts = products.filter((p) => p.category === category)
           if (filteredProducts.length === 0) return null
           return (
             <div
               key={category}
-              ref={(el) => {
-                categoryRefs.current[category] = el
-              }}
+              ref={(el) => { categoryRefs.current[category] = el }}
               className="mb-20"
             >
-              <h4 className="text-2xl font-bold mb-8">
-                {category}
-              </h4>
+              <h4 className="text-2xl font-bold mb-8">{category}</h4>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-10">
                 {filteredProducts.map((p) => (
                   <ProductCard key={p.id} product={p} />
@@ -378,102 +355,76 @@ export default function Home() {
         })}
       </section>
 
-      {/* ==================== FOOTER ==================== */}
-      <footer className="bg-black text-white/80 pt-16 pb-8 px-6 md:px-12">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
-            {/* Brand Column */}
-            <div>
-              <img src="/logo.png" className="h-16 mb-4 object-contain" />
-              <p className="text-sm text-white/60 leading-relaxed">
-                Aetheria brings you premium, waterproof, anti-tarnish jewelry designed for everyday luxury. Handcrafted with love and precision.
-              </p>
-              <div className="flex gap-4 mt-4">
-                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-yellow-400 transition text-xl">
-                  <FaInstagram />
-                </a>
-                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-yellow-400 transition text-xl">
-                  <FaFacebookF />
-                </a>
-                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-yellow-400 transition text-xl">
-                  <FaTwitter />
-                </a>
-                <a href="https://wa.me/918055100913" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-yellow-400 transition text-xl">
-                  <FaWhatsapp />
-                </a>
-              </div>
-            </div>
+      {/* OUR STORY SECTION */}
+      <section id="story" className="px-6 md:px-12 py-20 bg-gray-50">
+        <h3 className="text-3xl font-bold mb-6">Our Story</h3>
+        <p className="text-gray-600 max-w-3xl leading-relaxed">
+          Aetheria was created to bring everyday luxury into modern life.
+          Jewelry should not be reserved for occasions — it should be worn daily.
+          <br /><br />
+          Our pieces are waterproof, anti-tarnish, and crafted to last.
+          <br /><br />
+          We create more than jewelry — we create confidence.
+        </p>
+      </section>
 
-            {/* Quick Links */}
-            <div>
-              <h4 className="text-white font-semibold text-lg mb-4">Quick Links</h4>
-              <ul className="space-y-2 text-sm">
-                <li><a href="#" className="hover:text-yellow-400 transition">Home</a></li>
-                <li><a href="#shop" className="hover:text-yellow-400 transition">Shop</a></li>
-                <li><a href="#story" className="hover:text-yellow-400 transition">Our Story</a></li>
-                <li><a href="#contact" className="hover:text-yellow-400 transition">Contact</a></li>
-                <li><a href="#" className="hover:text-yellow-400 transition">FAQs</a></li>
-              </ul>
-            </div>
+      {/* INSTAGRAM SECTION */}
+      <section className="px-6 md:px-12 py-20 text-center">
+        <h3 className="text-3xl font-bold mb-4">Follow Us on Instagram</h3>
+        <p className="mb-6 text-gray-600">@_aetheria___</p>
+        <div className="flex justify-center">
+          <img src="/insta-qr.jpg" className="w-64 rounded-xl shadow-lg border" />
+        </div>
+      </section>
 
-            {/* Categories */}
-            <div>
-              <h4 className="text-white font-semibold text-lg mb-4">Categories</h4>
-              <ul className="space-y-2 text-sm">
-                {categories.map((cat) => (
-                  <li key={cat}>
-                    <button
-                      onClick={() => {
-                        const element = categoryRefs.current[cat]
-                        if (element) element.scrollIntoView({ behavior: 'smooth', block: 'start' })
-                      }}
-                      className="hover:text-yellow-400 transition"
-                    >
-                      {cat}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Contact Info */}
-            <div id="contact">
-              <h4 className="text-white font-semibold text-lg mb-4">Get in Touch</h4>
-              <ul className="space-y-3 text-sm">
-                <li className="flex items-start gap-3">
-                  <FaWhatsapp className="text-green-500 mt-0.5" />
-                  <a href="https://wa.me/918055100913" className="hover:text-yellow-400 transition">+91 80551 00913</a>
-                </li>
-                <li className="flex items-start gap-3">
-                  <FaEnvelope className="text-white/60 mt-0.5" />
-                  <a href="mailto:hello@aetheria.com" className="hover:text-yellow-400 transition">hello@aetheria.com</a>
-                </li>
-                <li className="flex items-start gap-3">
-                  <FaMapMarkerAlt className="text-white/60 mt-0.5" />
-                  <span>Mumbai, India</span>
-                </li>
-              </ul>
+      {/* FOOTER */}
+      <footer id="contact" className="bg-black text-white px-6 md:px-12 py-10 mt-16 rounded-t-4xl">
+        <div className="grid md:grid-cols-4 gap-8 md:gap-12">
+          <div>
+            <img src="/logo.png" className="h-20 mb-4" />
+            <p className="text-gray-400 text-sm leading-relaxed">
+              Aetheria brings modern luxury jewelry designed for everyday wear.
+              Durable, elegant, and timeless.
+            </p>
+          </div>
+          <div>
+            <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
+            <ul className="space-y-2 text-sm text-gray-400">
+              <li><a href="#" className="hover:text-yellow-400 transition">Home</a></li>
+              <li><a href="#shop" className="hover:text-yellow-400 transition">Products</a></li>
+              <li><a href="#story" className="hover:text-yellow-400 transition">Our Story</a></li>
+              <li><a href="#contact" className="hover:text-yellow-400 transition">Contact</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="text-lg font-semibold mb-4">Why Choose Us</h4>
+            <ul className="space-y-2 text-sm text-gray-400">
+              <li>✨ Waterproof Jewelry</li>
+              <li>✨ Anti-Tarnish</li>
+              <li>✨ Premium Quality</li>
+              <li>✨ Hypoallergenic</li>
+              <li>✨ Long Lasting Shine</li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="text-lg font-semibold mb-4">Contact</h4>
+            <p className="text-gray-400 text-sm">📞 +91 9028513130</p>
+            <p className="text-gray-400 text-sm mt-3">
+              📍 Bagban Complex, Peersha Khunt,<br />
+              AhilyNagar (AhmedNagar), 414001
+            </p>
+            <div className="flex gap-4 mt-4">
+              <a href="https://www.instagram.com/_aetheria___" target="_blank" rel="noopener noreferrer" className="hover:text-yellow-400 transition">Instagram</a>
+              <a href="https://wa.me/919028513130" target="_blank" rel="noopener noreferrer" className="hover:text-yellow-400 transition">WhatsApp</a>
             </div>
           </div>
-
-          <div className="border-t border-white/20 pt-8 text-center text-xs text-white/50">
-            <p>&copy; {new Date().getFullYear()} Aetheria Jewelry. All rights reserved.</p>
-            <p className="mt-1">Waterproof • Anti-Tarnish • Handcrafted with care</p>
-          </div>
+        </div>
+        <div className="border-t border-gray-800 mt-12 pt-6 text-center text-gray-500 text-sm">
+          © 2026 Aetheria. Crafted with elegance.
         </div>
       </footer>
 
-      {/* Back to Top Button */}
-      {showBackToTop && (
-        <button
-          onClick={scrollToTop}
-          className="fixed bottom-6 right-6 z-50 bg-yellow-500 hover:bg-yellow-600 text-black p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-110"
-        >
-          <FaArrowUp />
-        </button>
-      )}
-
-      {/* Global Animations */}
+      {/* ANIMATION STYLES */}
       <style jsx global>{`
         @keyframes marquee {
           0% { transform: translateX(0%); }
