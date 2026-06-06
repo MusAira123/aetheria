@@ -12,10 +12,12 @@ import {
   FaSearch,
   FaTimes,
   FaChevronLeft,
-  FaChevronRight
+  FaChevronRight,
+  FaExpand,
+  FaDownload
 } from 'react-icons/fa'
 
-// ==================== LIGHTBOX MODAL COMPONENT ====================
+// ==================== ATTRACTIVE LIGHTBOX MODAL ====================
 function ImageLightbox({
   images,
   initialIndex,
@@ -28,9 +30,13 @@ function ImageLightbox({
   productName: string
 }) {
   const [currentIndex, setCurrentIndex] = useState(initialIndex)
+  const [isZoomed, setIsZoomed] = useState(false)
+  const [touchStart, setTouchStart] = useState(0)
+  const [animate, setAnimate] = useState(false)
 
-  // Lock body scroll when modal opens
+  // Animate on mount
   useEffect(() => {
+    setAnimate(true)
     document.body.style.overflow = 'hidden'
     return () => {
       document.body.style.overflow = 'auto'
@@ -56,45 +62,91 @@ function ImageLightbox({
     setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1))
   }
 
+  // Touch swipe handlers
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStart(e.touches[0].clientX)
+  }
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (!touchStart) return
+    const diff = e.changedTouches[0].clientX - touchStart
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) goPrev()
+      else goNext()
+    }
+    setTouchStart(0)
+  }
+
+  const handleDownload = async () => {
+    const link = document.createElement('a')
+    link.href = images[currentIndex]
+    link.download = `${productName.replace(/\s+/g, '_')}_${currentIndex + 1}.jpg`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
+
   return (
     <div
-      className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-lg flex items-center justify-center transition-all duration-300"
+      className={`fixed inset-0 z-[100] flex items-center justify-center transition-all duration-500 ${
+        animate ? 'bg-black/95 backdrop-blur-md' : 'bg-black/0 backdrop-blur-0'
+      }`}
       onClick={onClose}
     >
-      {/* Close button */}
+      {/* Animated gradient background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-black/80 to-gold-500/10 pointer-events-none" />
+
+      {/* Close button - elegant floating */}
       <button
         onClick={onClose}
-        className="absolute top-4 right-4 md:top-6 md:right-6 text-white/80 hover:text-white bg-black/50 rounded-full p-2 md:p-3 transition-all z-20"
+        className="absolute top-4 right-4 md:top-6 md:right-6 text-white/70 hover:text-white bg-white/10 hover:bg-white/20 rounded-full p-2 md:p-3 backdrop-blur-md transition-all duration-300 z-20 hover:scale-110"
       >
         <FaTimes className="text-xl md:text-2xl" />
       </button>
 
-      {/* Product name (optional) */}
-      <div className="absolute bottom-6 left-0 right-0 text-center text-white/70 text-sm md:text-base font-medium z-20 pointer-events-none">
+      {/* Download button */}
+      <button
+        onClick={handleDownload}
+        className="absolute top-4 right-20 md:top-6 md:right-24 text-white/70 hover:text-white bg-white/10 hover:bg-white/20 rounded-full p-2 md:p-3 backdrop-blur-md transition-all duration-300 z-20 hover:scale-110"
+      >
+        <FaDownload className="text-lg md:text-xl" />
+      </button>
+
+      {/* Product name - elegant glass bar */}
+      <div className="absolute top-6 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full text-white/90 text-sm md:text-base font-medium z-20 whitespace-nowrap max-w-[80vw] truncate shadow-lg">
         {productName}
       </div>
 
-      {/* Main Image */}
+      {/* Main Image Container */}
       <div
-        className="relative w-full h-full flex items-center justify-center p-4 md:p-8"
+        className="relative w-full h-full flex items-center justify-center p-4 md:p-8 cursor-zoom-in"
         onClick={(e) => e.stopPropagation()}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
       >
-        <img
-          src={images[currentIndex]}
-          alt={`Product ${currentIndex + 1}`}
-          className="max-w-full max-h-full object-contain rounded-lg shadow-2xl transition-all duration-300"
-        />
+        <div
+          className={`transition-all duration-500 ease-out ${
+            isZoomed ? 'scale-150' : 'scale-100'
+          }`}
+          onClick={() => setIsZoomed(!isZoomed)}
+        >
+          <img
+            src={images[currentIndex]}
+            alt={`${productName} view ${currentIndex + 1}`}
+            className="max-w-full max-h-full object-contain rounded-2xl shadow-2xl transition-all duration-300"
+          />
+        </div>
 
-        {/* Previous Button */}
+        {/* Previous Button - with glow effect */}
         {images.length > 1 && (
           <button
             onClick={(e) => {
               e.stopPropagation()
               goPrev()
             }}
-            className="absolute left-2 md:left-6 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 text-white rounded-full p-2 md:p-4 transition-all duration-200 backdrop-blur-md"
+            className="absolute left-2 md:left-6 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/30 text-white rounded-full p-3 md:p-5 backdrop-blur-md transition-all duration-300 hover:scale-110 hover:shadow-glow group"
           >
-            <FaChevronLeft className="text-xl md:text-3xl" />
+            <FaChevronLeft className="text-xl md:text-3xl group-hover:-translate-x-0.5 transition-transform" />
           </button>
         )}
 
@@ -105,22 +157,22 @@ function ImageLightbox({
               e.stopPropagation()
               goNext()
             }}
-            className="absolute right-2 md:right-6 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 text-white rounded-full p-2 md:p-4 transition-all duration-200 backdrop-blur-md"
+            className="absolute right-2 md:right-6 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/30 text-white rounded-full p-3 md:p-5 backdrop-blur-md transition-all duration-300 hover:scale-110 hover:shadow-glow group"
           >
-            <FaChevronRight className="text-xl md:text-3xl" />
+            <FaChevronRight className="text-xl md:text-3xl group-hover:translate-x-0.5 transition-transform" />
           </button>
         )}
 
-        {/* Image Counter */}
+        {/* Image Counter - elegant pill */}
         {images.length > 1 && (
-          <div className="absolute bottom-20 left-1/2 -translate-x-1/2 bg-black/50 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs md:text-sm">
-            {currentIndex + 1} / {images.length}
+          <div className="absolute bottom-24 left-1/2 -translate-x-1/2 bg-black/50 backdrop-blur-md text-white px-4 py-1.5 rounded-full text-xs md:text-sm font-mono tracking-wide">
+            {String(currentIndex + 1).padStart(2, '0')} / {String(images.length).padStart(2, '0')}
           </div>
         )}
 
-        {/* Dots indicator */}
+        {/* Dots indicator - animated */}
         {images.length > 1 && (
-          <div className="absolute bottom-28 left-1/2 -translate-x-1/2 flex gap-2">
+          <div className="absolute bottom-32 left-1/2 -translate-x-1/2 flex gap-3 z-20">
             {images.map((_, idx) => (
               <button
                 key={idx}
@@ -130,19 +182,31 @@ function ImageLightbox({
                 }}
                 className={`transition-all duration-300 rounded-full ${
                   idx === currentIndex
-                    ? 'w-3 h-3 bg-white'
-                    : 'w-2 h-2 bg-white/40 hover:bg-white/60'
+                    ? 'w-3 h-3 bg-white scale-100'
+                    : 'w-2 h-2 bg-white/40 hover:bg-white/70 hover:scale-110'
                 }`}
               />
             ))}
           </div>
         )}
+
+        {/* Zoom hint */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/40 text-xs bg-black/30 backdrop-blur-sm px-3 py-1 rounded-full pointer-events-none">
+          Click image to zoom
+        </div>
       </div>
+
+      {/* Add custom style for glow shadow */}
+      <style jsx>{`
+        .hover\\:shadow-glow:hover {
+          box-shadow: 0 0 15px rgba(255,215,0,0.5);
+        }
+      `}</style>
     </div>
   )
 }
 
-// ==================== PRODUCT CARD COMPONENT ====================
+// ==================== PRODUCT CARD (with improved hover effects) ====================
 function ProductCard({ product }: any) {
   const [current, setCurrent] = useState(0)
   const [lightboxOpen, setLightboxOpen] = useState(false)
@@ -153,14 +217,14 @@ function ProductCard({ product }: any) {
       : [product.image_url]
 
   const nextImage = (e: React.MouseEvent) => {
-    e.stopPropagation() // Prevent opening lightbox when clicking next button
+    e.stopPropagation()
     setCurrent((prev) =>
       prev === images.length - 1 ? 0 : prev + 1
     )
   }
 
   const prevImage = (e: React.MouseEvent) => {
-    e.stopPropagation() // Prevent opening lightbox when clicking prev button
+    e.stopPropagation()
     setCurrent((prev) =>
       prev === 0 ? images.length - 1 : prev - 1
     )
@@ -173,19 +237,18 @@ function ProductCard({ product }: any) {
   return (
     <>
       <div className="group relative overflow-hidden rounded-3xl p-[1px] transition-all duration-500 hover:-translate-y-2">
-        {/* SNAKE BORDER */}
+        {/* Animated snake border */}
         <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition duration-500 overflow-hidden">
           <div className="absolute inset-[-200%] animate-snake-border bg-[conic-gradient(from_0deg,_transparent,_transparent,_#d4af37,_transparent,_transparent)]"></div>
         </div>
 
-        {/* CARD */}
+        {/* Card */}
         <div className="relative bg-white overflow-hidden rounded-3xl z-10 shadow-md hover:shadow-2xl transition-all duration-500 flex flex-col">
-          {/* IMAGE SECTION - Clickable to open lightbox */}
+          {/* Image area - clickable */}
           <div
-            className="relative w-full h-[190px] md:h-[360px] overflow-hidden flex items-center justify-center bg-black cursor-pointer"
+            className="relative w-full h-[190px] md:h-[360px] overflow-hidden flex items-center justify-center bg-black cursor-pointer group/image"
             onClick={openLightbox}
           >
-            {/* IMAGE SLIDER */}
             {images.map((img: string, index: number) => (
               <img
                 key={index}
@@ -199,34 +262,32 @@ function ProductCard({ product }: any) {
               />
             ))}
 
-            {/* DARK OVERLAY */}
-            <div className="absolute inset-0 bg-black/10 z-10 pointer-events-none"></div>
+            {/* Dark gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent z-10 pointer-events-none" />
 
-            {/* PREVIOUS BUTTON */}
+            {/* Buttons - visible on hover */}
             {images.length > 1 && (
-              <button
-                onClick={prevImage}
-                className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-md hover:bg-white/40 text-white border border-white/30 w-7 h-7 md:w-11 md:h-11 rounded-full flex items-center justify-center text-lg md:text-2xl transition-all duration-300 z-20"
-              >
-                ‹
-              </button>
+              <>
+                <button
+                  onClick={prevImage}
+                  className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-md hover:bg-white/40 text-white border border-white/30 w-7 h-7 md:w-11 md:h-11 rounded-full flex items-center justify-center text-lg md:text-2xl transition-all duration-300 z-20 opacity-0 group-hover/image:opacity-100"
+                >
+                  ‹
+                </button>
+                <button
+                  onClick={nextImage}
+                  className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-md hover:bg-white/40 text-white border border-white/30 w-7 h-7 md:w-11 md:h-11 rounded-full flex items-center justify-center text-lg md:text-2xl transition-all duration-300 z-20 opacity-0 group-hover/image:opacity-100"
+                >
+                  ›
+                </button>
+              </>
             )}
 
-            {/* NEXT BUTTON */}
-            {images.length > 1 && (
-              <button
-                onClick={nextImage}
-                className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-md hover:bg-white/40 text-white border border-white/30 w-7 h-7 md:w-11 md:h-11 rounded-full flex items-center justify-center text-lg md:text-2xl transition-all duration-300 z-20"
-              >
-                ›
-              </button>
-            )}
-
-            {/* IMAGE DOTS */}
+            {/* Dots */}
             {images.length > 1 && (
               <div
                 className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-2 z-20"
-                onClick={(e) => e.stopPropagation()} // Prevent lightbox when clicking dots
+                onClick={(e) => e.stopPropagation()}
               >
                 {images.map((_: any, index: number) => (
                   <button
@@ -245,9 +306,14 @@ function ProductCard({ product }: any) {
                 ))}
               </div>
             )}
+
+            {/* Expand icon hint */}
+            <div className="absolute bottom-2 right-2 bg-black/50 backdrop-blur-sm rounded-full p-1.5 opacity-0 group-hover/image:opacity-100 transition-opacity z-20 pointer-events-none">
+              <FaExpand className="text-white text-xs" />
+            </div>
           </div>
 
-          {/* CONTENT */}
+          {/* Content */}
           <div className="flex-1 flex flex-col justify-between p-3 md:p-8 text-center">
             <div>
               <h4 className="font-semibold text-[13px] md:text-2xl leading-snug">
@@ -257,17 +323,14 @@ function ProductCard({ product }: any) {
                 {product.description}
               </p>
             </div>
-
             <div className="mt-3 md:mt-6">
-              <p className="font-bold text-base md:text-2xl">
-                ₹{product.price}
-              </p>
+              <p className="font-bold text-base md:text-2xl">₹{product.price}</p>
               <p className="text-[10px] md:text-sm mt-1 md:mt-2 text-gray-700">
                 Available Qty: {product.qty}
               </p>
               <a
                 href={`https://wa.me/918055100913?text=Hi, I want ${product.name}`}
-                className="inline-block mt-3 md:mt-6 bg-green-600 text-white px-4 py-2 md:py-3 rounded-2xl w-full text-center text-[11px] md:text-base transition-all duration-300 hover:bg-green-700"
+                className="inline-block mt-3 md:mt-6 bg-green-600 text-white px-4 py-2 md:py-3 rounded-2xl w-full text-center text-[11px] md:text-base transition-all duration-300 hover:bg-green-700 hover:shadow-lg"
               >
                 Buy on WhatsApp
               </a>
@@ -276,7 +339,6 @@ function ProductCard({ product }: any) {
         </div>
       </div>
 
-      {/* LIGHTBOX MODAL */}
       {lightboxOpen && (
         <ImageLightbox
           images={images}
@@ -289,7 +351,7 @@ function ProductCard({ product }: any) {
   )
 }
 
-// ==================== MAIN HOME PAGE ====================
+// ==================== MAIN HOME PAGE (unchanged but included) ====================
 export default function Home() {
   const [products, setProducts] = useState<any[]>([])
   const [currentImage, setCurrentImage] = useState(0)
@@ -314,15 +376,12 @@ export default function Home() {
 
   useEffect(() => {
     fetchProducts()
-
     const imageInterval = setInterval(() => {
       setCurrentImage((prev) => (prev + 1) % heroImages.length)
     }, 7000)
-
     const quoteInterval = setInterval(() => {
       setCurrentQuote((prev) => (prev + 1) % quotes.length)
     }, 4000)
-
     return () => {
       clearInterval(imageInterval)
       clearInterval(quoteInterval)
@@ -331,21 +390,15 @@ export default function Home() {
 
   useEffect(() => {
     if (!search.trim()) return
-
     const matchingProduct = products.find(
       (p) =>
         p.name?.toLowerCase().includes(search.toLowerCase()) ||
         p.description?.toLowerCase().includes(search.toLowerCase())
     )
-
     if (matchingProduct?.category) {
       const element = categoryRefs.current[matchingProduct.category]
-
       if (element) {
-        element.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start',
-        })
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' })
       }
     }
   }, [search, products])
@@ -366,59 +419,35 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-white text-gray-900">
-
-      {/* HEADER */}
+      {/* Header */}
       <header className="sticky top-0 z-50 bg-black/95 backdrop-blur-md text-white px-6 md:px-12 py-4 rounded-b-3xl">
-
         <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
-
-          {/* NAV */}
           <nav className="flex flex-wrap gap-6 text-[11px] md:text-sm font-semibold tracking-[0.18em] uppercase">
-
             <a href="#" className="flex flex-col items-center hover:text-yellow-400 transition">
               <span>Home</span>
               <FaHome className="text-sm mt-1" />
             </a>
-
-            {/* PRODUCTS DROPDOWN */}
             <div
               className="relative"
               onMouseEnter={() => setDropdownOpen(true)}
               onMouseLeave={() => setDropdownOpen(false)}
             >
-
-              <a
-                href="#shop"
-                className="flex flex-col items-center hover:text-yellow-400 transition"
-              >
+              <a href="#shop" className="flex flex-col items-center hover:text-yellow-400 transition">
                 <span>Products</span>
                 <FaBoxOpen className="text-sm mt-1" />
               </a>
-
-              {/* DROPDOWN */}
               <div
                 className={`absolute left-0 top-full pt-2 min-w-[220px] z-50 transition-all duration-200 ${
-                  dropdownOpen
-                    ? 'opacity-100 visible'
-                    : 'opacity-0 invisible'
+                  dropdownOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
                 }`}
               >
-
                 <div className="bg-black border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
-
                   {categories.map((cat) => (
                     <button
                       key={cat}
                       onClick={() => {
                         const element = categoryRefs.current[cat]
-
-                        if (element) {
-                          element.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start',
-                          })
-                        }
-
+                        if (element) element.scrollIntoView({ behavior: 'smooth', block: 'start' })
                         setDropdownOpen(false)
                       }}
                       className="w-full text-left px-5 py-3 text-sm hover:bg-white/10 transition"
@@ -426,30 +455,20 @@ export default function Home() {
                       {cat}
                     </button>
                   ))}
-
                 </div>
-
               </div>
-
             </div>
-
             <a href="#story" className="flex flex-col items-center hover:text-yellow-400 transition">
               <span>Our Story</span>
               <FaBookOpen className="text-sm mt-1" />
             </a>
-
             <a href="#contact" className="flex flex-col items-center hover:text-yellow-400 transition">
               <span>Contact</span>
               <FaPhone className="text-sm mt-1" />
             </a>
-
           </nav>
-
-          {/* SEARCH BAR */}
           <div className="flex items-center bg-white/10 border border-white/20 rounded-full px-4 py-2 backdrop-blur-md w-full md:w-[280px]">
-
             <FaSearch className="text-white/70 mr-3" />
-
             <input
               type="text"
               placeholder="Search products..."
@@ -457,18 +476,13 @@ export default function Home() {
               onChange={(e) => setSearch(e.target.value)}
               className="bg-transparent outline-none text-sm text-white placeholder:text-white/50 w-full"
             />
-
           </div>
-
         </div>
-
       </header>
 
-      {/* TRUST STRIP */}
+      {/* Trust strip */}
       <section className="sticky top-[72px] z-40 overflow-hidden bg-gradient-to-r from-yellow-50 via-white to-yellow-50 py-6">
-
         <div className="flex animate-marquee whitespace-nowrap gap-16 text-sm md:text-base font-semibold text-gray-800">
-
           {[...Array(2)].map((_, i) => (
             <div key={i} className="flex gap-16">
               <span>✨ Waterproof</span>
@@ -480,66 +494,35 @@ export default function Home() {
               <span>✨ Handmade Jewelry</span>
             </div>
           ))}
-
         </div>
-
       </section>
 
-      {/* HERO */}
+      {/* Hero */}
       <section className="px-6 md:px-12 py-20 grid md:grid-cols-2 gap-10 items-center">
-
         <div className="flex flex-col gap-6">
-
           <div className="w-full flex justify-start ml-[40px] md:ml-[-120px]">
-
-            <img
-              src="/logo.png"
-              className="h-56 md:h-64 lg:h-80 object-contain"
-            />
-
+            <img src="/logo.png" className="h-56 md:h-64 lg:h-80 object-contain" />
           </div>
-
           <div className="bg-gradient-to-r from-black via-gray-900 to-black text-white rounded-xl px-6 py-3 shadow-md w-[340px] md:w-[420px] h-[60px] flex items-center">
-
-            <p className="text-sm md:text-base font-semibold tracking-wide">
-              {quotes[currentQuote]}
-            </p>
-
+            <p className="text-sm md:text-base font-semibold tracking-wide">{quotes[currentQuote]}</p>
           </div>
-
           <h2 className="text-5xl font-bold leading-tight">
             Premium Jewelry
             <br />
             Built for Everyday Luxury
           </h2>
-
-          <p className="text-gray-600 text-lg">
-            Waterproof • Anti-Tarnish • Modern Minimal Designs
-          </p>
-
+          <p className="text-gray-600 text-lg">Waterproof • Anti-Tarnish • Modern Minimal Designs</p>
           <div className="flex gap-4">
-
-            <a
-              href="#shop"
-              className="bg-black text-white px-6 py-3 rounded-lg"
-            >
+            <a href="#shop" className="bg-black text-white px-6 py-3 rounded-lg">
               Shop Now
             </a>
-
-            <a
-              href="https://wa.me/918055100913"
-              className="flex items-center gap-2 border px-6 py-3 rounded-lg"
-            >
+            <a href="https://wa.me/918055100913" className="flex items-center gap-2 border px-6 py-3 rounded-lg">
               <FaWhatsapp className="text-green-500 text-lg" />
               WhatsApp Us
             </a>
-
           </div>
-
         </div>
-
         <div className="relative w-full h-[480px] md:h-[560px] lg:h-[700px]">
-
           {heroImages.map((img, index) => (
             <img
               key={index}
@@ -548,53 +531,49 @@ export default function Home() {
               className={`absolute inset-0 w-full h-full object-cover rounded-2xl transition-all duration-1000 ${index === currentImage ? 'opacity-100 z-10' : 'opacity-0'}`}
             />
           ))}
-
         </div>
-
       </section>
 
-      {/* PRODUCTS */}
+      {/* Products */}
       <section id="shop" className="px-6 md:px-12 py-20">
-
-        <h3 className="text-3xl font-bold mb-14">
-          Shop By Categories
-        </h3>
-
+        <h3 className="text-3xl font-bold mb-14">Shop By Categories</h3>
         {categories.map((category) => {
-
-          const filteredProducts = products.filter(
-            (p) => p.category === category
-          )
-
+          const filteredProducts = products.filter((p) => p.category === category)
           if (filteredProducts.length === 0) return null
-
           return (
             <div
               key={category}
-              ref={(el) => {
-                categoryRefs.current[category] = el
-              }}
+              ref={(el) => { categoryRefs.current[category] = el }}
               className="mb-20"
             >
-
-              <h4 className="text-2xl font-bold mb-8">
-                {category}
-              </h4>
-
+              <h4 className="text-2xl font-bold mb-8">{category}</h4>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-10">
-
                 {filteredProducts.map((p) => (
                   <ProductCard key={p.id} product={p} />
                 ))}
-
               </div>
-
             </div>
           )
         })}
-
       </section>
 
+      {/* Add marquee animation */}
+      <style jsx global>{`
+        @keyframes marquee {
+          0% { transform: translateX(0%); }
+          100% { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+          animation: marquee 20s linear infinite;
+        }
+        @keyframes snake-border {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        .animate-snake-border {
+          animation: snake-border 3s linear infinite;
+        }
+      `}</style>
     </main>
   )
 }
