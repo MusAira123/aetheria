@@ -17,7 +17,7 @@ import {
   FaDownload
 } from 'react-icons/fa'
 
-// ==================== ATTRACTIVE LIGHTBOX MODAL (FIXED ZOOM ISSUE) ====================
+// ==================== LIGHTBOX WITH BLURRED BACKGROUND ====================
 function ImageLightbox({
   images,
   initialIndex,
@@ -34,7 +34,6 @@ function ImageLightbox({
   const [touchStart, setTouchStart] = useState(0)
   const [animate, setAnimate] = useState(false)
 
-  // Animate on mount
   useEffect(() => {
     setAnimate(true)
     document.body.style.overflow = 'hidden'
@@ -43,7 +42,6 @@ function ImageLightbox({
     }
   }, [])
 
-  // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose()
@@ -56,7 +54,7 @@ function ImageLightbox({
 
   const goPrev = () => {
     setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1))
-    setIsZoomed(false) // Reset zoom when changing image
+    setIsZoomed(false)
   }
 
   const goNext = () => {
@@ -64,7 +62,6 @@ function ImageLightbox({
     setIsZoomed(false)
   }
 
-  // Touch swipe handlers
   const handleTouchStart = (e: React.TouchEvent) => {
     setTouchStart(e.touches[0].clientX)
   }
@@ -96,17 +93,17 @@ function ImageLightbox({
   return (
     <div
       className={`fixed inset-0 z-[100] flex items-center justify-center transition-all duration-500 ${
-        animate ? 'bg-black/95 backdrop-blur-md' : 'bg-black/0 backdrop-blur-0'
+        animate ? 'backdrop-blur-xl bg-black/30' : 'backdrop-blur-0 bg-black/0'
       }`}
       onClick={onClose}
     >
-      {/* Animated gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-black/80 to-gold-500/10 pointer-events-none" />
+      {/* Optional subtle gradient overlay (very light) */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-black/10 pointer-events-none" />
 
       {/* Close button */}
       <button
         onClick={onClose}
-        className="absolute top-4 right-4 md:top-6 md:right-6 text-white/70 hover:text-white bg-white/10 hover:bg-white/20 rounded-full p-2 md:p-3 backdrop-blur-md transition-all duration-300 z-20 hover:scale-110"
+        className="absolute top-4 right-4 md:top-6 md:right-6 text-white bg-black/30 hover:bg-black/50 backdrop-blur-md rounded-full p-2 md:p-3 transition-all duration-300 z-20 hover:scale-110"
       >
         <FaTimes className="text-xl md:text-2xl" />
       </button>
@@ -114,13 +111,13 @@ function ImageLightbox({
       {/* Download button */}
       <button
         onClick={handleDownload}
-        className="absolute top-4 right-20 md:top-6 md:right-24 text-white/70 hover:text-white bg-white/10 hover:bg-white/20 rounded-full p-2 md:p-3 backdrop-blur-md transition-all duration-300 z-20 hover:scale-110"
+        className="absolute top-4 right-20 md:top-6 md:right-24 text-white bg-black/30 hover:bg-black/50 backdrop-blur-md rounded-full p-2 md:p-3 transition-all duration-300 z-20 hover:scale-110"
       >
         <FaDownload className="text-lg md:text-xl" />
       </button>
 
-      {/* Product name */}
-      <div className="absolute top-6 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full text-white/90 text-sm md:text-base font-medium z-20 whitespace-nowrap max-w-[80vw] truncate shadow-lg">
+      {/* Product name - glassmorphic */}
+      <div className="absolute top-6 left-1/2 -translate-x-1/2 bg-black/40 backdrop-blur-md px-4 py-2 rounded-full text-white text-sm md:text-base font-medium z-20 whitespace-nowrap max-w-[80vw] truncate shadow-lg">
         {productName}
       </div>
 
@@ -131,7 +128,6 @@ function ImageLightbox({
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
-        {/* Image wrapper with zoom toggle */}
         <div
           className={`transition-all duration-300 ease-out cursor-zoom-in ${
             isZoomed ? 'scale-150' : 'scale-100'
@@ -146,7 +142,6 @@ function ImageLightbox({
           />
         </div>
 
-        {/* Navigation Buttons */}
         {images.length > 1 && (
           <>
             <button
@@ -154,7 +149,7 @@ function ImageLightbox({
                 e.stopPropagation()
                 goPrev()
               }}
-              className="absolute left-2 md:left-6 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/30 text-white rounded-full p-3 md:p-5 backdrop-blur-md transition-all duration-300 hover:scale-110 hover:shadow-glow group"
+              className="absolute left-2 md:left-6 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white rounded-full p-3 md:p-5 backdrop-blur-md transition-all duration-300 hover:scale-110 hover:shadow-glow group"
             >
               <FaChevronLeft className="text-xl md:text-3xl group-hover:-translate-x-0.5 transition-transform" />
             </button>
@@ -163,21 +158,19 @@ function ImageLightbox({
                 e.stopPropagation()
                 goNext()
               }}
-              className="absolute right-2 md:right-6 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/30 text-white rounded-full p-3 md:p-5 backdrop-blur-md transition-all duration-300 hover:scale-110 hover:shadow-glow group"
+              className="absolute right-2 md:right-6 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white rounded-full p-3 md:p-5 backdrop-blur-md transition-all duration-300 hover:scale-110 hover:shadow-glow group"
             >
               <FaChevronRight className="text-xl md:text-3xl group-hover:translate-x-0.5 transition-transform" />
             </button>
           </>
         )}
 
-        {/* Image counter */}
         {images.length > 1 && (
           <div className="absolute bottom-24 left-1/2 -translate-x-1/2 bg-black/50 backdrop-blur-md text-white px-4 py-1.5 rounded-full text-xs md:text-sm font-mono tracking-wide">
             {String(currentIndex + 1).padStart(2, '0')} / {String(images.length).padStart(2, '0')}
           </div>
         )}
 
-        {/* Dots indicator */}
         {images.length > 1 && (
           <div className="absolute bottom-32 left-1/2 -translate-x-1/2 flex gap-3 z-20">
             {images.map((_, idx) => (
@@ -191,15 +184,14 @@ function ImageLightbox({
                 className={`transition-all duration-300 rounded-full ${
                   idx === currentIndex
                     ? 'w-3 h-3 bg-white scale-100'
-                    : 'w-2 h-2 bg-white/40 hover:bg-white/70 hover:scale-110'
+                    : 'w-2 h-2 bg-white/50 hover:bg-white/80 hover:scale-110'
                 }`}
               />
             ))}
           </div>
         )}
 
-        {/* Zoom hint */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/40 text-xs bg-black/30 backdrop-blur-sm px-3 py-1 rounded-full pointer-events-none">
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/60 text-xs bg-black/30 backdrop-blur-sm px-3 py-1 rounded-full pointer-events-none">
           Click image to zoom
         </div>
       </div>
@@ -213,7 +205,7 @@ function ImageLightbox({
   )
 }
 
-// ==================== PRODUCT CARD ====================
+// ==================== PRODUCT CARD (unchanged) ====================
 function ProductCard({ product }: any) {
   const [current, setCurrent] = useState(0)
   const [lightboxOpen, setLightboxOpen] = useState(false)
@@ -249,7 +241,6 @@ function ProductCard({ product }: any) {
         </div>
 
         <div className="relative bg-white overflow-hidden rounded-3xl z-10 shadow-md hover:shadow-2xl transition-all duration-500 flex flex-col">
-          {/* Image area */}
           <div
             className="relative w-full h-[190px] md:h-[360px] overflow-hidden flex items-center justify-center bg-black cursor-pointer group/image"
             onClick={openLightbox}
@@ -351,7 +342,7 @@ function ProductCard({ product }: any) {
   )
 }
 
-// ==================== MAIN HOME PAGE ====================
+// ==================== MAIN HOME PAGE (unchanged) ====================
 export default function Home() {
   const [products, setProducts] = useState<any[]>([])
   const [currentImage, setCurrentImage] = useState(0)
