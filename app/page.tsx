@@ -9,145 +9,287 @@ import {
   FaBoxOpen,
   FaBookOpen,
   FaPhone,
-  FaSearch
+  FaSearch,
+  FaTimes,
+  FaChevronLeft,
+  FaChevronRight
 } from 'react-icons/fa'
 
+// ==================== LIGHTBOX MODAL COMPONENT ====================
+function ImageLightbox({
+  images,
+  initialIndex,
+  onClose,
+  productName
+}: {
+  images: string[]
+  initialIndex: number
+  onClose: () => void
+  productName: string
+}) {
+  const [currentIndex, setCurrentIndex] = useState(initialIndex)
+
+  // Lock body scroll when modal opens
+  useEffect(() => {
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = 'auto'
+    }
+  }, [])
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+      if (e.key === 'ArrowLeft') goPrev()
+      if (e.key === 'ArrowRight') goNext()
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [currentIndex])
+
+  const goPrev = () => {
+    setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1))
+  }
+
+  const goNext = () => {
+    setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1))
+  }
+
+  return (
+    <div
+      className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-lg flex items-center justify-center transition-all duration-300"
+      onClick={onClose}
+    >
+      {/* Close button */}
+      <button
+        onClick={onClose}
+        className="absolute top-4 right-4 md:top-6 md:right-6 text-white/80 hover:text-white bg-black/50 rounded-full p-2 md:p-3 transition-all z-20"
+      >
+        <FaTimes className="text-xl md:text-2xl" />
+      </button>
+
+      {/* Product name (optional) */}
+      <div className="absolute bottom-6 left-0 right-0 text-center text-white/70 text-sm md:text-base font-medium z-20 pointer-events-none">
+        {productName}
+      </div>
+
+      {/* Main Image */}
+      <div
+        className="relative w-full h-full flex items-center justify-center p-4 md:p-8"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <img
+          src={images[currentIndex]}
+          alt={`Product ${currentIndex + 1}`}
+          className="max-w-full max-h-full object-contain rounded-lg shadow-2xl transition-all duration-300"
+        />
+
+        {/* Previous Button */}
+        {images.length > 1 && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation()
+              goPrev()
+            }}
+            className="absolute left-2 md:left-6 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 text-white rounded-full p-2 md:p-4 transition-all duration-200 backdrop-blur-md"
+          >
+            <FaChevronLeft className="text-xl md:text-3xl" />
+          </button>
+        )}
+
+        {/* Next Button */}
+        {images.length > 1 && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation()
+              goNext()
+            }}
+            className="absolute right-2 md:right-6 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 text-white rounded-full p-2 md:p-4 transition-all duration-200 backdrop-blur-md"
+          >
+            <FaChevronRight className="text-xl md:text-3xl" />
+          </button>
+        )}
+
+        {/* Image Counter */}
+        {images.length > 1 && (
+          <div className="absolute bottom-20 left-1/2 -translate-x-1/2 bg-black/50 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs md:text-sm">
+            {currentIndex + 1} / {images.length}
+          </div>
+        )}
+
+        {/* Dots indicator */}
+        {images.length > 1 && (
+          <div className="absolute bottom-28 left-1/2 -translate-x-1/2 flex gap-2">
+            {images.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setCurrentIndex(idx)
+                }}
+                className={`transition-all duration-300 rounded-full ${
+                  idx === currentIndex
+                    ? 'w-3 h-3 bg-white'
+                    : 'w-2 h-2 bg-white/40 hover:bg-white/60'
+                }`}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// ==================== PRODUCT CARD COMPONENT ====================
 function ProductCard({ product }: any) {
   const [current, setCurrent] = useState(0)
+  const [lightboxOpen, setLightboxOpen] = useState(false)
 
   const images =
     product.images?.length > 0
       ? product.images
       : [product.image_url]
 
-  const nextImage = () => {
+  const nextImage = (e: React.MouseEvent) => {
+    e.stopPropagation() // Prevent opening lightbox when clicking next button
     setCurrent((prev) =>
       prev === images.length - 1 ? 0 : prev + 1
     )
   }
 
-  const prevImage = () => {
+  const prevImage = (e: React.MouseEvent) => {
+    e.stopPropagation() // Prevent opening lightbox when clicking prev button
     setCurrent((prev) =>
       prev === 0 ? images.length - 1 : prev - 1
     )
   }
 
+  const openLightbox = () => {
+    setLightboxOpen(true)
+  }
+
   return (
-    <div className="group relative overflow-hidden rounded-3xl p-[1px] transition-all duration-500 hover:-translate-y-2">
+    <>
+      <div className="group relative overflow-hidden rounded-3xl p-[1px] transition-all duration-500 hover:-translate-y-2">
+        {/* SNAKE BORDER */}
+        <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition duration-500 overflow-hidden">
+          <div className="absolute inset-[-200%] animate-snake-border bg-[conic-gradient(from_0deg,_transparent,_transparent,_#d4af37,_transparent,_transparent)]"></div>
+        </div>
 
-      {/* SNAKE BORDER */}
-      <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition duration-500 overflow-hidden">
+        {/* CARD */}
+        <div className="relative bg-white overflow-hidden rounded-3xl z-10 shadow-md hover:shadow-2xl transition-all duration-500 flex flex-col">
+          {/* IMAGE SECTION - Clickable to open lightbox */}
+          <div
+            className="relative w-full h-[190px] md:h-[360px] overflow-hidden flex items-center justify-center bg-black cursor-pointer"
+            onClick={openLightbox}
+          >
+            {/* IMAGE SLIDER */}
+            {images.map((img: string, index: number) => (
+              <img
+                key={index}
+                src={img}
+                className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-in-out group-hover:scale-110
+                ${
+                  index === current
+                    ? 'opacity-100 scale-100 z-10'
+                    : 'opacity-0 scale-110 z-0'
+                }`}
+              />
+            ))}
 
-        <div className="absolute inset-[-200%] animate-snake-border bg-[conic-gradient(from_0deg,_transparent,_transparent,_#d4af37,_transparent,_transparent)]"></div>
+            {/* DARK OVERLAY */}
+            <div className="absolute inset-0 bg-black/10 z-10 pointer-events-none"></div>
 
-      </div>
+            {/* PREVIOUS BUTTON */}
+            {images.length > 1 && (
+              <button
+                onClick={prevImage}
+                className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-md hover:bg-white/40 text-white border border-white/30 w-7 h-7 md:w-11 md:h-11 rounded-full flex items-center justify-center text-lg md:text-2xl transition-all duration-300 z-20"
+              >
+                ‹
+              </button>
+            )}
 
-      {/* CARD */}
-      <div className="relative bg-white overflow-hidden rounded-3xl z-10 shadow-md hover:shadow-2xl transition-all duration-500 flex flex-col">
+            {/* NEXT BUTTON */}
+            {images.length > 1 && (
+              <button
+                onClick={nextImage}
+                className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-md hover:bg-white/40 text-white border border-white/30 w-7 h-7 md:w-11 md:h-11 rounded-full flex items-center justify-center text-lg md:text-2xl transition-all duration-300 z-20"
+              >
+                ›
+              </button>
+            )}
 
-        {/* IMAGE */}
-        <div className="relative w-full h-[190px] md:h-[360px] overflow-hidden flex items-center justify-center bg-black">
+            {/* IMAGE DOTS */}
+            {images.length > 1 && (
+              <div
+                className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-2 z-20"
+                onClick={(e) => e.stopPropagation()} // Prevent lightbox when clicking dots
+              >
+                {images.map((_: any, index: number) => (
+                  <button
+                    key={index}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setCurrent(index)
+                    }}
+                    className={`transition-all duration-300 rounded-full
+                    ${
+                      index === current
+                        ? 'w-4 h-2 bg-white'
+                        : 'w-2 h-2 bg-white/50 hover:bg-white/80'
+                    }`}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
 
-          {/* IMAGE SLIDER */}
-          {images.map((img: string, index: number) => (
-            <img
-              key={index}
-              src={img}
-              className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-in-out group-hover:scale-110
-              ${
-                index === current
-                  ? 'opacity-100 scale-100 z-10'
-                  : 'opacity-0 scale-110 z-0'
-              }`}
-            />
-          ))}
-
-          {/* DARK OVERLAY */}
-          <div className="absolute inset-0 bg-black/10 z-10"></div>
-
-          {/* PREVIOUS BUTTON */}
-          {images.length > 1 && (
-            <button
-              onClick={prevImage}
-              className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-md hover:bg-white/40 text-white border border-white/30 w-7 h-7 md:w-11 md:h-11 rounded-full flex items-center justify-center text-lg md:text-2xl transition-all duration-300 z-20"
-            >
-              ‹
-            </button>
-          )}
-
-          {/* NEXT BUTTON */}
-          {images.length > 1 && (
-            <button
-              onClick={nextImage}
-              className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-md hover:bg-white/40 text-white border border-white/30 w-7 h-7 md:w-11 md:h-11 rounded-full flex items-center justify-center text-lg md:text-2xl transition-all duration-300 z-20"
-            >
-              ›
-            </button>
-          )}
-
-          {/* IMAGE DOTS */}
-          {images.length > 1 && (
-            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-2 z-20">
-
-              {images.map((_: any, index: number) => (
-                <div
-                  key={index}
-                  className={`transition-all duration-300 rounded-full
-                  ${
-                    index === current
-                      ? 'w-4 h-2 bg-white'
-                      : 'w-2 h-2 bg-white/50'
-                  }`}
-                />
-              ))}
-
+          {/* CONTENT */}
+          <div className="flex-1 flex flex-col justify-between p-3 md:p-8 text-center">
+            <div>
+              <h4 className="font-semibold text-[13px] md:text-2xl leading-snug">
+                {product.name}
+              </h4>
+              <p className="text-gray-600 text-[10px] md:text-sm mt-1 md:mt-3 leading-relaxed px-1 md:px-2">
+                {product.description}
+              </p>
             </div>
-          )}
 
-        </div>
-
-        {/* CONTENT */}
-        <div className="flex-1 flex flex-col justify-between p-3 md:p-8 text-center">
-
-          <div>
-
-            <h4 className="font-semibold text-[13px] md:text-2xl leading-snug">
-              {product.name}
-            </h4>
-
-            <p className="text-gray-600 text-[10px] md:text-sm mt-1 md:mt-3 leading-relaxed px-1 md:px-2">
-              {product.description}
-            </p>
-
+            <div className="mt-3 md:mt-6">
+              <p className="font-bold text-base md:text-2xl">
+                ₹{product.price}
+              </p>
+              <p className="text-[10px] md:text-sm mt-1 md:mt-2 text-gray-700">
+                Available Qty: {product.qty}
+              </p>
+              <a
+                href={`https://wa.me/918055100913?text=Hi, I want ${product.name}`}
+                className="inline-block mt-3 md:mt-6 bg-green-600 text-white px-4 py-2 md:py-3 rounded-2xl w-full text-center text-[11px] md:text-base transition-all duration-300 hover:bg-green-700"
+              >
+                Buy on WhatsApp
+              </a>
+            </div>
           </div>
-
-          <div className="mt-3 md:mt-6">
-
-            <p className="font-bold text-base md:text-2xl">
-              ₹{product.price}
-            </p>
-
-            <p className="text-[10px] md:text-sm mt-1 md:mt-2 text-gray-700">
-              Available Qty: {product.qty}
-            </p>
-
-            <a
-              href={`https://wa.me/918055100913?text=Hi, I want ${product.name}`}
-              className="inline-block mt-3 md:mt-6 bg-green-600 text-white px-4 py-2 md:py-3 rounded-2xl w-full text-center text-[11px] md:text-base transition-all duration-300 hover:bg-green-700"
-            >
-              Buy on WhatsApp
-            </a>
-
-          </div>
-
         </div>
-
       </div>
 
-    </div>
+      {/* LIGHTBOX MODAL */}
+      {lightboxOpen && (
+        <ImageLightbox
+          images={images}
+          initialIndex={current}
+          onClose={() => setLightboxOpen(false)}
+          productName={product.name}
+        />
+      )}
+    </>
   )
 }
 
+// ==================== MAIN HOME PAGE ====================
 export default function Home() {
   const [products, setProducts] = useState<any[]>([])
   const [currentImage, setCurrentImage] = useState(0)
