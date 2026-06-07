@@ -543,8 +543,48 @@ export default function Home() {
         })}
       </section>
 
+      {/* SHIPPING POLICY SECTION */}
+      <section id="shipping" className="px-6 md:px-12 py-20 bg-gray-50">
+        <div className="max-w-4xl mx-auto">
+          <h3 className="text-3xl font-bold mb-6">Shipping Policy – Aetheria</h3>
+          <p className="text-gray-600 leading-relaxed mb-4">
+            Thank you for shopping with Aetheria. We are committed to delivering your jewellery safely and on time. Every order is carefully packed to ensure it reaches you in perfect condition.
+          </p>
+          <div className="space-y-4 text-gray-600">
+            <div>
+              <h4 className="font-semibold text-lg mb-1">Order Processing</h4>
+              <p>• Once your order is placed, you will receive an order confirmation message.</p>
+              <p>• Orders are usually processed and dispatched within 2–5 working days.</p>
+              <p>• Tracking details will be shared once your order has been shipped.</p>
+            </div>
+            <div>
+              <h4 className="font-semibold text-lg mb-1">Shipping Charges</h4>
+              <p>• A standard shipping fee of ₹50 is applicable on all orders below ₹799.</p>
+              <p>• Orders worth ₹799 or above qualify for free shipping.</p>
+              <p>• Shipping charges are non-refundable once the order has been dispatched.</p>
+            </div>
+            <div>
+              <h4 className="font-semibold text-lg mb-1">Delivery Timeline</h4>
+              <p>• Delivery time depends on your location and courier service availability.</p>
+              <p>• Most orders are delivered within 4–7 working days after dispatch.</p>
+              <p>• During festivals, sales, or unforeseen circumstances, delivery may take slightly longer.</p>
+            </div>
+            <div>
+              <h4 className="font-semibold text-lg mb-1">Tracking Your Order</h4>
+              <p>• Once your parcel is shipped, a tracking number will be shared with you.</p>
+              <p>• You can use the tracking details to monitor your shipment status.</p>
+            </div>
+            <div>
+              <h4 className="font-semibold text-lg mb-1">Need Help?</h4>
+              <p>For any shipping-related questions, feel free to contact us through Instagram DM or WhatsApp. We are always happy to assist you.</p>
+              <p className="mt-2 italic">Aetheria ✨<br />Crafted with care, delivered with love. 💖</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* STORY SECTION */}
-      <section id="story" className="px-6 md:px-12 py-20 bg-gray-50">
+      <section id="story" className="px-6 md:px-12 py-20 bg-white">
         <h3 className="text-3xl font-bold mb-6">Our Story</h3>
         <p className="text-gray-600 max-w-3xl leading-relaxed">
           Aetheria was created to bring everyday luxury into modern life.
@@ -596,14 +636,10 @@ export default function Home() {
           </div>
           <div>
             <h4 className="text-lg font-semibold mb-4">Contact</h4>
-            <p className="text-gray-400 text-sm">📞 +91 9028513130</p>
-            <p className="text-gray-400 text-sm mt-3">
-              📍 Bagban Complex, Peersha Khunt,<br />
-              AhilyNagar (AhmedNagar), 414001
-            </p>
+            <p className="text-gray-400 text-sm">📞 +91 8055100913</p>
             <div className="flex gap-4 mt-4">
               <a href="https://www.instagram.com/_aetheria___" target="_blank" rel="noopener noreferrer" className="hover:text-yellow-400 transition">Instagram</a>
-              <a href="https://wa.me/919028513130" target="_blank" rel="noopener noreferrer" className="hover:text-yellow-400 transition">WhatsApp</a>
+              <a href="https://wa.me/918055100913" target="_blank" rel="noopener noreferrer" className="hover:text-yellow-400 transition">WhatsApp</a>
             </div>
           </div>
         </div>
