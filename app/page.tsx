@@ -545,7 +545,7 @@ export default function Home() {
 
       {/* SHIPPING POLICY SECTION */}
       <section id="shipping" className="px-6 md:px-12 py-20 bg-gray-50">
-        <div className="max-w-4xl mx-auto">
+        <div>
           <h3 className="text-3xl font-bold mb-6">Shipping Policy – Aetheria</h3>
           <p className="text-gray-600 leading-relaxed mb-4">
             Thank you for shopping with Aetheria. We are committed to delivering your jewellery safely and on time. Every order is carefully packed to ensure it reaches you in perfect condition.
