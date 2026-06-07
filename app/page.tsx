@@ -583,17 +583,46 @@ export default function Home() {
         </div>
       </section>
 
-      {/* STORY SECTION */}
+      {/* STORY SECTION - UPDATED */}
       <section id="story" className="px-6 md:px-12 py-20 bg-white">
         <h3 className="text-3xl font-bold mb-6">Our Story</h3>
-        <p className="text-gray-600 max-w-3xl leading-relaxed">
-          Aetheria was created to bring everyday luxury into modern life.
-          Jewelry should not be reserved for occasions — it should be worn daily.
-          <br /><br />
-          Our pieces are waterproof, anti-tarnish, and crafted to last.
-          <br /><br />
-          We create more than jewelry — we create confidence.
-        </p>
+        <div className="text-gray-600 max-w-4xl leading-relaxed space-y-4">
+          <p>
+            ✨ <strong>About AETHERIA</strong> ✨
+          </p>
+          <p>
+            At Aetheria, we believe jewellery is not just for special occasions—it’s for everyday moments too.
+          </p>
+          <p>
+            Whether you're a college student heading to class, a working woman balancing a busy schedule, or someone who simply loves adding a touch of elegance to their daily look, Aetheria is designed for you.
+          </p>
+          <p>
+            Our collection is thoughtfully curated to complement every part of your life—from casual outings and office days to festive celebrations and special occasions.
+          </p>
+          <p>
+            Looking for a birthday gift? A meaningful present for a friend? A little self-love purchase? Aetheria makes gifting simple, stylish, and memorable.
+          </p>
+          <ul className="list-disc pl-5 space-y-1">
+            <li>✨ Perfect for everyday wear</li>
+            <li>✨ Ideal for festivals and celebrations</li>
+            <li>✨ Thoughtful gifting for friends and loved ones</li>
+            <li>✨ Easy-to-style designs for every outfit</li>
+            <li>✨ Trendy, elegant, and pocket-friendly</li>
+          </ul>
+          <p>
+            We believe everyone deserves beautiful jewellery without having to spend a fortune. That's why we focus on offering pieces that are fashionable, versatile, and affordable.
+          </p>
+          <p>
+            From classrooms to workplaces, from birthdays to festivals, Aetheria is here to add a little sparkle to every moment.
+          </p>
+          <p className="font-semibold">
+            AETHERIA ✨<br />
+            <em>Everyday Elegance. Thoughtful Gifting. Affordable Luxury.</em> 💖
+          </p>
+          <p>
+            📩 DM to order.
+          </p>
+        </div>
       </section>
 
       {/* INSTAGRAM SECTION */}
