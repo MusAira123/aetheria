@@ -394,13 +394,14 @@ export default function Home() {
     setProducts(data || [])
   }
 
+  // ==================== UPDATED CATEGORIES SEQUENCE ====================
   const categories = [
+    "Necklace",
     "Earrings",
-    "Rings",
     "Bracelets",
+    "Rings",
     "Gift Hampers",
-    "Hair Accessories",
-    "Necklace"
+    "Hair Accessories"
   ]
 
   return (
@@ -591,7 +592,7 @@ export default function Home() {
             ✨ <strong>About AETHERIA</strong> ✨
           </p>
           <p>
-            At Aetheria, we believe jewellery is not just for special occasions—it’s for everyday moments too.
+            At Aetheria, we believe jewellery is not just for special occasions—it's for everyday moments too.
           </p>
           <p>
             Whether you're a college student heading to class, a working woman balancing a busy schedule, or someone who simply loves adding a touch of elegance to their daily look, Aetheria is designed for you.
