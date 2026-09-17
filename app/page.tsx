@@ -344,6 +344,7 @@ export default function Home() {
   const [currentQuote, setCurrentQuote] = useState(0)
   const [search, setSearch] = useState('')
   const [dropdownOpen, setDropdownOpen] = useState(false)
+  const [showBanner, setShowBanner] = useState(true)
 
   const categoryRefs = useRef<any>({})
 
@@ -406,6 +407,22 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-white text-gray-900">
+      {/* ==================== ANNOUNCEMENT BANNER ==================== */}
+      {showBanner && (
+        <div className="relative w-full bg-gradient-to-r from-pink-500 via-rose-500 to-pink-600 text-white text-center py-3 px-12 shadow-lg z-[60]">
+          <p className="text-sm md:text-base font-semibold tracking-wide">
+            💖 Baby, Please maan ja na re 💖
+          </p>
+          <button
+            onClick={() => setShowBanner(false)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 text-white rounded-full w-7 h-7 md:w-8 md:h-8 flex items-center justify-center transition-all duration-300 hover:scale-110"
+            aria-label="Close banner"
+          >
+            <FaTimes className="text-sm md:text-base" />
+          </button>
+        </div>
+      )}
+
       {/* HEADER */}
       <header className="sticky top-0 z-50 bg-black/95 backdrop-blur-md text-white px-6 md:px-12 py-4 rounded-b-3xl">
         <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
