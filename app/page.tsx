@@ -344,7 +344,7 @@ export default function Home() {
   const [currentQuote, setCurrentQuote] = useState(0)
   const [search, setSearch] = useState('')
   const [dropdownOpen, setDropdownOpen] = useState(false)
-  const [showPopup, setShowPopup] = useState(false)
+  const [showPopup, setShowPopup] = useState(true)   // 👈 starts TRUE — shows immediately on every load/refresh
 
   const categoryRefs = useRef<any>({})
 
@@ -363,21 +363,13 @@ export default function Home() {
 
   useEffect(() => {
     fetchProducts()
-
-    // Show popup after a short delay when page loads
-    const popupTimer = setTimeout(() => {
-      setShowPopup(true)
-    }, 600)
-
     const imageInterval = setInterval(() => {
       setCurrentImage((prev) => (prev + 1) % heroImages.length)
     }, 7000)
     const quoteInterval = setInterval(() => {
       setCurrentQuote((prev) => (prev + 1) % quotes.length)
     }, 4000)
-
     return () => {
-      clearTimeout(popupTimer)
       clearInterval(imageInterval)
       clearInterval(quoteInterval)
     }
@@ -430,54 +422,92 @@ export default function Home() {
       {/* ==================== POPUP BANNER ==================== */}
       {showPopup && (
         <div
-          className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-[fadeIn_0.3s_ease-out]"
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 9999,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+            padding: '16px'
+          }}
           onClick={() => setShowPopup(false)}
         >
           <div
-            className="relative w-full max-w-md md:max-w-lg bg-gradient-to-br from-pink-500 via-rose-500 to-pink-600 rounded-3xl shadow-2xl p-8 md:p-10 text-center text-white animate-[popIn_0.4s_cubic-bezier(0.34,1.56,0.64,1)]"
+            style={{
+              position: 'relative',
+              width: '100%',
+              maxWidth: '420px',
+              background: 'linear-gradient(135deg, #ec4899 0%, #f43f5e 50%, #ec4899 100%)',
+              borderRadius: '24px',
+              padding: '40px 28px',
+              textAlign: 'center',
+              color: '#ffffff',
+              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
+            }}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close button */}
             <button
               onClick={() => setShowPopup(false)}
-              className="absolute top-3 right-3 bg-white/20 hover:bg-white/40 text-white rounded-full w-9 h-9 flex items-center justify-center transition-all duration-300 hover:scale-110 hover:rotate-90"
-              aria-label="Close popup"
+              style={{
+                position: 'absolute',
+                top: '12px',
+                right: '12px',
+                width: '36px',
+                height: '36px',
+                borderRadius: '50%',
+                background: 'rgba(255,255,255,0.25)',
+                color: '#ffffff',
+                border: 'none',
+                cursor: 'pointer',
+                fontSize: '18px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+              aria-label="Close"
             >
-              <FaTimes className="text-lg" />
+              ✕
             </button>
 
-            {/* Decorative sparkles */}
-            <div className="absolute top-4 left-4 text-2xl opacity-70 animate-pulse">✨</div>
-            <div className="absolute bottom-4 right-4 text-2xl opacity-70 animate-pulse">💖</div>
+            <div style={{ fontSize: '56px', marginBottom: '12px' }}>💖</div>
 
-            <div className="text-5xl md:text-6xl mb-4">💖</div>
-
-            <h2 className="text-2xl md:text-3xl font-bold mb-3 leading-snug">
+            <h2
+              style={{
+                fontSize: '26px',
+                fontWeight: 'bold',
+                marginBottom: '12px',
+                lineHeight: 1.3
+              }}
+            >
               Baby, Please maan ja na re
             </h2>
 
-            <p className="text-sm md:text-base text-white/90 mb-6">
+            <p style={{ fontSize: '15px', opacity: 0.9, marginBottom: '24px' }}>
               Something special is waiting for you 🎁
             </p>
 
             <button
               onClick={() => setShowPopup(false)}
-              className="bg-white text-pink-600 font-bold px-8 py-3 rounded-full shadow-lg hover:scale-105 transition-all duration-300"
+              style={{
+                background: '#ffffff',
+                color: '#ec4899',
+                fontWeight: 'bold',
+                padding: '12px 32px',
+                borderRadius: '9999px',
+                border: 'none',
+                cursor: 'pointer',
+                fontSize: '16px'
+              }}
             >
               Okay 💕
             </button>
           </div>
-
-          <style jsx>{`
-            @keyframes fadeIn {
-              from { opacity: 0; }
-              to { opacity: 1; }
-            }
-            @keyframes popIn {
-              0% { opacity: 0; transform: scale(0.7) translateY(30px); }
-              100% { opacity: 1; transform: scale(1) translateY(0); }
-            }
-          `}</style>
         </div>
       )}
 
