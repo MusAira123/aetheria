@@ -344,7 +344,7 @@ export default function Home() {
   const [currentQuote, setCurrentQuote] = useState(0)
   const [search, setSearch] = useState('')
   const [dropdownOpen, setDropdownOpen] = useState(false)
-  const [showBanner, setShowBanner] = useState(true)
+  const [showPopup, setShowPopup] = useState(false)
 
   const categoryRefs = useRef<any>({})
 
@@ -363,17 +363,37 @@ export default function Home() {
 
   useEffect(() => {
     fetchProducts()
+
+    // Show popup after a short delay when page loads
+    const popupTimer = setTimeout(() => {
+      setShowPopup(true)
+    }, 600)
+
     const imageInterval = setInterval(() => {
       setCurrentImage((prev) => (prev + 1) % heroImages.length)
     }, 7000)
     const quoteInterval = setInterval(() => {
       setCurrentQuote((prev) => (prev + 1) % quotes.length)
     }, 4000)
+
     return () => {
+      clearTimeout(popupTimer)
       clearInterval(imageInterval)
       clearInterval(quoteInterval)
     }
   }, [])
+
+  // Lock scroll when popup is open
+  useEffect(() => {
+    if (showPopup) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'auto'
+    }
+    return () => {
+      document.body.style.overflow = 'auto'
+    }
+  }, [showPopup])
 
   useEffect(() => {
     if (!search.trim()) return
@@ -407,19 +427,57 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-white text-gray-900">
-      {/* ==================== ANNOUNCEMENT BANNER ==================== */}
-      {showBanner && (
-        <div className="relative w-full bg-gradient-to-r from-pink-500 via-rose-500 to-pink-600 text-white text-center py-3 px-12 shadow-lg z-[60]">
-          <p className="text-sm md:text-base font-semibold tracking-wide">
-            💖 Baby, Please maan ja na re 💖
-          </p>
-          <button
-            onClick={() => setShowBanner(false)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 text-white rounded-full w-7 h-7 md:w-8 md:h-8 flex items-center justify-center transition-all duration-300 hover:scale-110"
-            aria-label="Close banner"
+      {/* ==================== POPUP BANNER ==================== */}
+      {showPopup && (
+        <div
+          className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-[fadeIn_0.3s_ease-out]"
+          onClick={() => setShowPopup(false)}
+        >
+          <div
+            className="relative w-full max-w-md md:max-w-lg bg-gradient-to-br from-pink-500 via-rose-500 to-pink-600 rounded-3xl shadow-2xl p-8 md:p-10 text-center text-white animate-[popIn_0.4s_cubic-bezier(0.34,1.56,0.64,1)]"
+            onClick={(e) => e.stopPropagation()}
           >
-            <FaTimes className="text-sm md:text-base" />
-          </button>
+            {/* Close button */}
+            <button
+              onClick={() => setShowPopup(false)}
+              className="absolute top-3 right-3 bg-white/20 hover:bg-white/40 text-white rounded-full w-9 h-9 flex items-center justify-center transition-all duration-300 hover:scale-110 hover:rotate-90"
+              aria-label="Close popup"
+            >
+              <FaTimes className="text-lg" />
+            </button>
+
+            {/* Decorative sparkles */}
+            <div className="absolute top-4 left-4 text-2xl opacity-70 animate-pulse">✨</div>
+            <div className="absolute bottom-4 right-4 text-2xl opacity-70 animate-pulse">💖</div>
+
+            <div className="text-5xl md:text-6xl mb-4">💖</div>
+
+            <h2 className="text-2xl md:text-3xl font-bold mb-3 leading-snug">
+              Baby, Please maan ja na re
+            </h2>
+
+            <p className="text-sm md:text-base text-white/90 mb-6">
+              Something special is waiting for you 🎁
+            </p>
+
+            <button
+              onClick={() => setShowPopup(false)}
+              className="bg-white text-pink-600 font-bold px-8 py-3 rounded-full shadow-lg hover:scale-105 transition-all duration-300"
+            >
+              Okay 💕
+            </button>
+          </div>
+
+          <style jsx>{`
+            @keyframes fadeIn {
+              from { opacity: 0; }
+              to { opacity: 1; }
+            }
+            @keyframes popIn {
+              0% { opacity: 0; transform: scale(0.7) translateY(30px); }
+              100% { opacity: 1; transform: scale(1) translateY(0); }
+            }
+          `}</style>
         </div>
       )}
 
