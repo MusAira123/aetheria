@@ -344,7 +344,7 @@ export default function Home() {
   const [currentQuote, setCurrentQuote] = useState(0)
   const [search, setSearch] = useState('')
   const [dropdownOpen, setDropdownOpen] = useState(false)
-  const [showPopup, setShowPopup] = useState(true)   // 👈 starts TRUE — shows immediately on every load/refresh
+  const [showPopup, setShowPopup] = useState(true)
 
   const categoryRefs = useRef<any>({})
 
@@ -488,25 +488,9 @@ export default function Home() {
               Baby, Please maan ja na re
             </h2>
 
-            <p style={{ fontSize: '15px', opacity: 0.9, marginBottom: '24px' }}>
-              Something special is waiting for you 🎁
+            <p style={{ fontSize: '20px', opacity: 0.95, fontWeight: 600, margin: 0 }}>
+              plz plz plz plz
             </p>
-
-            <button
-              onClick={() => setShowPopup(false)}
-              style={{
-                background: '#ffffff',
-                color: '#ec4899',
-                fontWeight: 'bold',
-                padding: '12px 32px',
-                borderRadius: '9999px',
-                border: 'none',
-                cursor: 'pointer',
-                fontSize: '16px'
-              }}
-            >
-              Okay 💕
-            </button>
           </div>
         </div>
       )}
