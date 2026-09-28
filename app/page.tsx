@@ -344,7 +344,6 @@ export default function Home() {
   const [currentQuote, setCurrentQuote] = useState(0)
   const [search, setSearch] = useState('')
   const [dropdownOpen, setDropdownOpen] = useState(false)
-  const [showPopup, setShowPopup] = useState(true)
 
   const categoryRefs = useRef<any>({})
 
@@ -374,18 +373,6 @@ export default function Home() {
       clearInterval(quoteInterval)
     }
   }, [])
-
-  // Lock scroll when popup is open
-  useEffect(() => {
-    if (showPopup) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = 'auto'
-    }
-    return () => {
-      document.body.style.overflow = 'auto'
-    }
-  }, [showPopup])
 
   useEffect(() => {
     if (!search.trim()) return
@@ -419,82 +406,6 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-white text-gray-900">
-      {/* ==================== POPUP BANNER ==================== */}
-      {showPopup && (
-        <div
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            zIndex: 9999,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: 'rgba(0, 0, 0, 0.7)',
-            padding: '16px'
-          }}
-          onClick={() => setShowPopup(false)}
-        >
-          <div
-            style={{
-              position: 'relative',
-              width: '100%',
-              maxWidth: '420px',
-              background: 'linear-gradient(135deg, #ec4899 0%, #f43f5e 50%, #ec4899 100%)',
-              borderRadius: '24px',
-              padding: '40px 28px',
-              textAlign: 'center',
-              color: '#ffffff',
-              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Close button */}
-            <button
-              onClick={() => setShowPopup(false)}
-              style={{
-                position: 'absolute',
-                top: '12px',
-                right: '12px',
-                width: '36px',
-                height: '36px',
-                borderRadius: '50%',
-                background: 'rgba(255,255,255,0.25)',
-                color: '#ffffff',
-                border: 'none',
-                cursor: 'pointer',
-                fontSize: '18px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}
-              aria-label="Close"
-            >
-              ✕
-            </button>
-
-            <div style={{ fontSize: '56px', marginBottom: '12px' }}>💖</div>
-
-            <h2
-              style={{
-                fontSize: '26px',
-                fontWeight: 'bold',
-                marginBottom: '12px',
-                lineHeight: 1.3
-              }}
-            >
-              Baby, Please maan ja na re
-            </h2>
-
-            <p style={{ fontSize: '20px', opacity: 0.95, fontWeight: 600, margin: 0 }}>
-              plz plz plz plz
-            </p>
-          </div>
-        </div>
-      )}
-
       {/* HEADER */}
       <header className="sticky top-0 z-50 bg-black/95 backdrop-blur-md text-white px-6 md:px-12 py-4 rounded-b-3xl">
         <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
